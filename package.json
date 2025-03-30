@@ -1,6 +1,6 @@
 {
   "name": "markify-ts",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Convert web pages and HTML snippets into Markdown content",
   "type": "module",
   "main": "dist/index.js",
@@ -23,9 +23,7 @@
   "keywords": [
     "html",
     "markdown",
-    "cheerio",
-    "nextjs",
-    "react"
+    "cheerio"
   ],
   "author": "Thiago Barbosa",
   "license": "MIT",
