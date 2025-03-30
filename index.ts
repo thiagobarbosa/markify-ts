@@ -1,5 +1,5 @@
-export { getHTML } from '@/services/html/html-fetcher'
-export { generateMarkdown } from '@/services/markdown/markdown-generator'
-export { markify } from '@/services/markify'
+export { getHTML } from '@/lib/html/html-fetcher'
+export { generateMarkdown } from '@/lib/markdown/markdown-generator'
+export { markify } from '@/lib/markify'
 export { type MarkifyOptions } from '@/types/markify-options'
 export { type MarkifyResult } from '@/types/markify-result'

@@ -1,7 +1,7 @@
 import * as cheerio from 'cheerio'
-import { getHTML } from '@/services/html/html-fetcher'
-import { cleanSpaces } from '@/services/utils'
-import { processElement } from '@/services/markdown/handlers/elements'
+import { getHTML } from '@/lib/html/html-fetcher'
+import { cleanSpaces } from '@/lib/utils'
+import { processElement } from '@/lib/markdown/handlers/elements'
 import assert from 'node:assert'
 
 /**

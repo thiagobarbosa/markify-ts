@@ -1,7 +1,7 @@
 import * as cheerio from 'cheerio'
-import { handleLinks } from '@/services/markdown/handlers/links'
-import { processTable } from '@/services/markdown/handlers/tables'
-import { processList } from '@/services/markdown/handlers/lists'
+import { handleLinks } from '@/lib/markdown/handlers/links'
+import { processTable } from '@/lib/markdown/handlers/tables'
+import { processList } from '@/lib/markdown/handlers/lists'
 
 export const processElement = async (
   $: cheerio.Root,

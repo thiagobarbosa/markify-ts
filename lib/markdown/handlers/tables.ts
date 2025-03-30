@@ -1,4 +1,4 @@
-import { processChildren } from '@/services/markdown/handlers/elements'
+import { processChildren } from '@/lib/markdown/handlers/elements'
 
 /**
  * Maximum number of rows to process in a table,

@@ -1,5 +1,5 @@
 import { mkdir, writeFile } from 'fs/promises'
-import { generateMarkdown } from '@/services/markdown/markdown-generator'
+import { generateMarkdown } from '@/lib/markdown/markdown-generator'
 import { dirname } from 'path'
 
 const main = async () => {

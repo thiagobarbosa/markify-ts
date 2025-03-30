@@ -1,5 +1,5 @@
 import * as cheerio from 'cheerio'
-import { processChildren } from '@/services/markdown/handlers/elements'
+import { processChildren } from '@/lib/markdown/handlers/elements'
 
 export const processList = async (
   $: cheerio.Root,
