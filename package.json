@@ -1,0 +1,58 @@
+{
+  "name": "markify-test",
+  "version": "0.0.26",
+  "description": "Convert web pages and HTML snippets into Markdown content",
+  "type": "module",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "markify": "tsx run.ts --url --output",
+    "build": "tsup index.ts --minify --dts --format esm --out-dir dist",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
+  },
+  "keywords": [
+    "html",
+    "markdown",
+    "cheerio",
+    "nextjs",
+    "react"
+  ],
+  "author": "Thiago Barbosa",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/thiagobarbosa/markify-ts"
+  },
+  "dependencies": {
+    "@swc/core": "^1.11.13",
+    "@swc/types": "^0.1.20",
+    "cheerio": "^1.0.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.23.0",
+    "@types/cheerio": "^0.22.35",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "@typescript-eslint/eslint-plugin": "^8.28.0",
+    "@typescript-eslint/parser": "^8.28.0",
+    "eslint": "^9.23.0",
+    "tsup": "^8.0.0",
+    "typescript": "^5"
+  },
+  "peerDependencies": {
+    "cheerio": "^1.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  }
+}

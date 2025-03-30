@@ -1,0 +1,19 @@
+# dependencies
+/node_modules
+
+# next.js
+/.next/
+/out/
+
+# production
+/dist
+
+# misc
+.DS_Store
+.idea
+
+# env files
+.env*
+
+# typescript
+next-env.d.ts
