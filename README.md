@@ -3,6 +3,13 @@
 Typescript library to seamlessly convert web pages
 and HTML snippets into well-structured Markdown content.
 
+## Features
+
+- Convert web pages to Markdown from a URL
+- Convert raw HTML strings to Markdown
+- Ignore specific elements by providing a list of HTML selectors
+- Command line interface
+
 ## Installation
 
 ```bash
