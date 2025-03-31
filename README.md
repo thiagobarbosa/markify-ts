@@ -9,14 +9,47 @@ and HTML snippets into well-structured Markdown content.
 - Convert raw HTML strings to Markdown
 - Ignore specific elements by providing a list of HTML selectors
 - Command line interface
+- Next.js web interface for easy URL-to-Markdown conversion
 
-## Installation
+## Library Installation
 
 ```bash
 npm install markify
 ```
 
-## Usage
+## Web Application Usage
+
+The project now includes a Next.js 14 web application that allows you to convert URLs to Markdown with a simple UI.
+
+### Setup and Run the Web Application
+
+```bash
+# Clone the repository
+git clone "https://github.com/thiagobarbosa/markify-ts.git"
+cd markify
+
+# Install dependencies
+npm install
+
+# Run the development server
+npm run dev
+```
+
+Visit http://localhost:3000 to use the application.
+
+### Web Application Features
+
+- Clean, responsive interface with light/dark mode
+- Input any URL to convert to Markdown
+- Copy or download the generated Markdown with a click
+- Smooth animations using Framer Motion
+- Built with Next.js 14, TypeScript, and Tailwind CSS
+
+### Customizing the Theme
+
+You can easily customize the color palette by editing the `app/theme-config.ts` file. This allows you to change the primary, secondary, and other colors.
+
+## Library Usage
 
 ### Convert a webpage to Markdown
 
