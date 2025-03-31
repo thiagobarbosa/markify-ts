@@ -1,6 +1,6 @@
 import * as cheerio from 'cheerio'
 import { getHTML } from '@/lib/html/html-fetcher'
-import { cleanSpaces } from '@/lib/utils'
+import { cleanSpaces, preProcessingRemovals } from '@/lib/utils'
 import { processElement } from '@/lib/markdown/handlers/elements'
 import assert from 'node:assert'
 
@@ -13,10 +13,11 @@ import assert from 'node:assert'
  * @returns The markdown content generated from the HTML
  * @throws Error if no HTML content is provided
  */
-export const generateMarkdown = async ({ html, url, fetchOptions }:
+export const generateMarkdown = async ({ html, url, fetchOptions, ignoreSelectors }:
   {
     html?: string | null,
     url?: string | null,
+    ignoreSelectors?: string[],
     fetchOptions?: RequestInit
   }
 ): Promise<string> => {
@@ -25,11 +26,8 @@ export const generateMarkdown = async ({ html, url, fetchOptions }:
     html = await getHTML(url, fetchOptions)
   }
 
-  const $ = cheerio.load(html)
-  $('script, noscript, style, svg, header, footer, head, nav, iframe, [role="contentinfo"]').remove()
-
-  // remove items that have role="alert" or "dialog"
-  $('[role="alert"], [role="dialog"]').remove()
+  let $ = cheerio.load(html)
+  $ = preProcessingRemovals($, ignoreSelectors)
 
   const promise = processElement($, $('body')[0], 'default', url)
   return await promise.then((markdown) => cleanSpaces(markdown))

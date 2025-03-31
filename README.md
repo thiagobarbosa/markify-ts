@@ -31,7 +31,37 @@ const result = await markify({
 console.log(result.markdown)
 ```
 
-### Run from the command line 
+### Ignore specific elements
+
+```typescript
+const result = await markify({
+  url: 'https://example.com',
+  ignoreSelectors: ['p', '.container']
+});
+```
+
+<details>
+    <summary>Examples of selectors to ignore</summary>
+
+- Ignore all ```spans```
+
+> ['span']
+
+- Ignore all elements with the class ```container```
+
+> ['.container']
+
+Ignore all elements with a ```data-testid``` attribute equal to ```featured-item```
+
+> ['[data-testid="featured-item"]']
+
+Ignore all elements with id equals to 'banner'
+
+> ['#banner']
+
+</details>
+
+### Run from the command line
 
 ```bash
 
@@ -48,6 +78,9 @@ npm run markify -- --url "https://example.com"
 
 # Run with a HTML string
 npm run markify -- --html "<h1>Hello World</h1>"
+
+# Run with a specific URL and ignore specific elements
+npm run markify -- --url "https://www.booking.com/hotel/es/the-barcelona-edition.en-gb.html" --ignore "script,style"
 
 # Define the output directory/file
 npm run markify -- --url "https://example.com" --output "files/output.md"

@@ -8,6 +8,7 @@ const main = async () => {
   let html = null
   let url = null
   let outputPath = 'outputs/markdown.md'
+  let ignoreSelectors: string[] = []
 
   // Improved argument parsing
   for (let i = 0; i < args.length; i++) {
@@ -20,10 +21,13 @@ const main = async () => {
     } else if (args[i] === '--output' && i + 1 < args.length) {
       outputPath = args[i + 1]
       i++
+    } else if (args[i] === '--ignore' && i + 1 < args.length) {
+      ignoreSelectors = args[i + 1].split(',')
+      i++
     }
   }
 
-  console.log({ url, html, outputPath })
+  console.log({ url, html, outputPath, ignoreSelectors })
 
   if (!url && !html) {
     console.error('Error: Neither URL nor HTML provided')
@@ -31,7 +35,7 @@ const main = async () => {
   }
 
   try {
-    const markdown = await generateMarkdown({ html, url })
+    const markdown = await generateMarkdown({ html, url, ignoreSelectors })
     const outputDir = dirname(outputPath)
 
     mkdir(outputDir, { recursive: true }).then(() => {

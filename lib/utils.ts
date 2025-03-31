@@ -1,3 +1,5 @@
+import cheerio from 'cheerio'
+
 /**
  * Trims excessive breaks from a markdown string.
  * Operations performed:
@@ -20,4 +22,35 @@ export const cleanSpaces = (markdown: string): string => {
       .replace(/\n+$/, '')
       .trim()
   )
+}
+
+export const preProcessingRemovals = (
+  $: cheerio.Root,
+  selectorsToIgnore?: string[]
+) => {
+  // remove globally unwanted elements
+  $('script, noscript, style').remove()
+
+  // remove invisible elements
+  $('*').each((_, el) => {
+    if (!isVisible($(el))) {
+      $(el).remove()
+    }
+  })
+
+  // remove elements based on selectors
+  if (selectorsToIgnore?.length) {
+    for (const selector of selectorsToIgnore) {
+      if ($(selector).length) {
+        $(selector).remove()
+      }
+    }
+  }
+
+  return $
+}
+
+const isVisible = (el: any): boolean => {
+  const style = el.css(['display', 'visibility'])
+  return style?.display !== 'none' && style?.visibility !== 'hidden'
 }

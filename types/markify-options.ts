@@ -8,4 +8,6 @@ export interface MarkifyOptions {
   htmlContent?: string;
   /** Custom fetch options when retrieving URL */
   fetchOptions?: RequestInit;
+  /** Selectors to ignore when processing the HTML */
+  ignoreSelectors?: string[];
 }
