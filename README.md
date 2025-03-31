@@ -43,11 +43,14 @@ cd markify
 npm install
 
 # Run with a specific URL
-npm run markify "https://example.com"
+npm run markify -- --url "https://example.com"
 # an output file will be created under "outputs/markdown.md"
 
+# Run with a HTML string
+npm run markify -- --html "<h1>Hello World</h1>"
+
 # Define the output directory/file
-npm run markify "https://example.com" "files/output.md"
+npm run markify -- --url "https://example.com" --output "files/output.md"
 ```
 
 ## License

@@ -15,7 +15,7 @@
     "LICENSE"
   ],
   "scripts": {
-    "markify": "tsx run.ts --url --output",
+    "markify": "tsx run.ts",
     "build": "tsup index.ts --minify --dts --format esm --out-dir dist",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"

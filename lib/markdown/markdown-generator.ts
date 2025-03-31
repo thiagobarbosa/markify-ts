@@ -9,13 +9,16 @@ import assert from 'node:assert'
  * @param html The HTML content to convert to markdown
  * @param url The URL of the HTML content; used for relative links
  * @param fetchOptions Options to pass to the fetch function
+ * @param selectorsToIgnore An array of selectors to ignore when processing the HTML
  * @returns The markdown content generated from the HTML
  * @throws Error if no HTML content is provided
  */
-export const generateMarkdown = async (
-  html?: string | null,
-  url?: string | null,
-  fetchOptions?: RequestInit
+export const generateMarkdown = async ({ html, url, fetchOptions }:
+  {
+    html?: string | null,
+    url?: string | null,
+    fetchOptions?: RequestInit
+  }
 ): Promise<string> => {
   if (!html) {
     assert(url, 'Either html or url must be provided')

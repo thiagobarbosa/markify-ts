@@ -8,21 +8,19 @@ const main = async () => {
   let html = null
   let url = null
   let outputPath = 'outputs/markdown.md'
-  const indexReference = Math.round(args.length / 2)
 
-  const urlIndex = args.findIndex((arg) => arg.startsWith('--url'))
-  if (urlIndex !== -1) {
-    url = args[urlIndex + indexReference]
-  }
-
-  const htmlIndex = args.findIndex((arg) => arg.startsWith('--html'))
-  if (htmlIndex !== -1) {
-    html = args[htmlIndex + indexReference]
-  }
-
-  const outputIndex = args.findIndex((arg) => arg.startsWith('--output'))
-  if (outputIndex !== -1) {
-    outputPath = args[outputIndex + indexReference] || outputPath
+  // Improved argument parsing
+  for (let i = 0; i < args.length; i++) {
+    if (args[i] === '--url' && i + 1 < args.length) {
+      url = args[i + 1]
+      i++ // Skip the next argument as we've used it as a value
+    } else if (args[i] === '--html' && i + 1 < args.length) {
+      html = args[i + 1]
+      i++
+    } else if (args[i] === '--output' && i + 1 < args.length) {
+      outputPath = args[i + 1]
+      i++
+    }
   }
 
   console.log({ url, html, outputPath })
@@ -33,7 +31,7 @@ const main = async () => {
   }
 
   try {
-    const markdown = await generateMarkdown(html, url)
+    const markdown = await generateMarkdown({ html, url })
     const outputDir = dirname(outputPath)
 
     mkdir(outputDir, { recursive: true }).then(() => {
