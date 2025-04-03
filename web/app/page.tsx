@@ -2,16 +2,15 @@
 import { Input } from '@/components/ui/input'
 import { ChangeEvent, useState } from 'react'
 import Footer from '@/components/footer'
-import { BookmarkSimple, Copy, SignOut } from '@phosphor-icons/react'
+import { BookmarkSimple, Copy } from '@phosphor-icons/react'
 import { Button } from '@/components/ui/button'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { Loader } from '@/components/ui/loader'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import Markdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
-import { SignInButton, useAuth, UserButton } from '@clerk/nextjs'
+import { useAuth } from '@clerk/nextjs'
 import Link from 'next/link'
-import { dark } from '@clerk/themes'
 import { Login } from '@/components/login'
 
 export default function Home() {
@@ -73,7 +72,7 @@ export default function Home() {
   }
 
   return (
-    <div className="container min-h-screen flex flex-col mx-auto my-8">
+    <div className="container min-h-screen flex flex-col mx-auto pt-8">
       <div className="flex flex-col items-center justify-center gap-8 font-[family-name:var(--font-geist-sans)]">
         <div className="flex justify-between items-center w-full p-6">
           <Link href={'/'} className="hidden md:flex">
@@ -97,7 +96,7 @@ export default function Home() {
               My Bookmarks
             </Link>
           </Button>
-         <Login />
+          <Login />
         </div>
         <ol
           className="text-lg text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
@@ -174,7 +173,6 @@ export default function Home() {
             <Markdown remarkPlugins={[remarkGfm]}>
             {markdown}
             </Markdown>
-            {/*</SyntaxHighlighter>*/}
           </pre>
         </section>
       )}

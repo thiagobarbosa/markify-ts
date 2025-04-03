@@ -16,7 +16,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { toast } from 'sonner'
 import { Bookmark } from '@/types/bookmark'
 
-export const AddBookmark = ({
+export const AddUrl = ({
   isDialogOpen,
   setIsDialogOpen,
   title,
@@ -95,26 +95,17 @@ export const AddBookmark = ({
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogTrigger asChild>
-        <Button>
+        <Button className={'cursor-pointer'}>
           <PlusCircle className="h-4 w-4" />
           Add page
         </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Add New Bookmark</DialogTitle>
+          <DialogTitle>Add page</DialogTitle>
           <DialogDescription>Enter the details of the website you want to save.</DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
-          <div className="grid gap-2">
-            <Label htmlFor="title">Title</Label>
-            <Input
-              id="title"
-              placeholder="Website Title"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-            />
-          </div>
           <div className="grid gap-2">
             <Label htmlFor="url">URL</Label>
             <Input
@@ -122,6 +113,15 @@ export const AddBookmark = ({
               placeholder="https://example.com"
               value={url}
               onChange={(e) => setUrl(e.target.value)}
+            />
+          </div>
+          <div className="grid gap-2">
+            <Label htmlFor="title">Title</Label>
+            <Input
+              id="title"
+              placeholder="Website Title"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
             />
           </div>
           <div className="grid gap-2">
@@ -149,7 +149,7 @@ export const AddBookmark = ({
             Cancel
           </Button>
           <Button onClick={addBookmark} disabled={isLoading} className={'w-36'}>
-            {!isLoading && <span>Save Bookmark</span>}
+            {!isLoading && <span>Save page</span>}
             {isLoading && <span>Saving...</span>}
           </Button>
         </DialogFooter>

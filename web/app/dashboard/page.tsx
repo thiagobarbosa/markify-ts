@@ -8,12 +8,12 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { toast } from 'sonner'
-import { AddBookmark } from '@/components/add-bookmark'
-import { EditBookmark } from '@/components/edit-bookmark'
+import { AddUrl } from '@/components/add-url'
+import { EditUrl } from '@/components/edit-url'
 import { Bookmark } from '@/types/bookmark'
-import { useClerk, useUser } from '@clerk/nextjs'
 import Link from 'next/link'
 import { Login } from '@/components/login'
+import Footer from '@/components/footer'
 
 const categories = {
   general: 'General',
@@ -28,9 +28,6 @@ const categories = {
 }
 
 export default function BookmarkManager() {
-  const { user } = useUser()
-  const { signOut } = useClerk()
-
   const [bookmarks, setBookmarks] = useState<Bookmark[]>([])
   const [title, setTitle] = useState('')
   const [url, setUrl] = useState('')
@@ -43,22 +40,17 @@ export default function BookmarkManager() {
 
   // Load bookmarks from localStorage on component mount with user ID
   useEffect(() => {
-    if (user) {
-      const userId = user.id
-      const savedBookmarks = localStorage.getItem(`bookmarks_${userId}`)
-      if (savedBookmarks) {
-        setBookmarks(JSON.parse(savedBookmarks))
-      }
+    const savedBookmarks = localStorage.getItem('bookmarks')
+    if (savedBookmarks) {
+      setBookmarks(JSON.parse(savedBookmarks))
     }
-  }, [user])
+  }, [])
 
   // Save bookmarks to localStorage whenever they change
   useEffect(() => {
-    if (user) {
-      const userId = user.id
-      localStorage.setItem(`bookmarks_${userId}`, JSON.stringify(bookmarks))
-    }
-  }, [bookmarks, user])
+    if (!bookmarks.length) return
+    localStorage.setItem('bookmarks', JSON.stringify(bookmarks))
+  }, [bookmarks])
 
   // Get unique categories from bookmarks
   const uniqueCategories = ['all', ...new Set(bookmarks.map((bookmark) => bookmark.category))]
@@ -73,7 +65,9 @@ export default function BookmarkManager() {
   })
 
   const deleteBookmark = (id: string) => {
-    setBookmarks(bookmarks.filter((bookmark) => bookmark.id !== id))
+    const updatedBookmarks = bookmarks.filter((bookmark) => bookmark.id !== id)
+    setBookmarks(updatedBookmarks)
+    localStorage.setItem('bookmarks', JSON.stringify(updatedBookmarks))
     toast.success('Bookmark deleted', {
       description: 'Your bookmark has been removed',
     })
@@ -94,8 +88,8 @@ export default function BookmarkManager() {
   }
 
   return (
-    <div className="container min-h-screen flex flex-col mx-auto my-8 p-6">
-      <div className="flex justify-between items-center w-full">
+    <div className="container min-h-screen flex flex-col mx-auto pt-8">
+      <div className="flex justify-between items-center w-full p-6">
         <Link href={'/'} className="hidden md:flex">
           <div className="flex">
             <img
@@ -124,16 +118,16 @@ export default function BookmarkManager() {
             />
           </div>
 
-          <AddBookmark isDialogOpen={isDialogOpen} setIsDialogOpen={setIsDialogOpen} title={title} setTitle={setTitle}
-                       url={url} setUrl={setUrl} category={category} setCategory={setCategory} bookmarks={bookmarks}
-                       setBookmarks={setBookmarks} />
+          <AddUrl isDialogOpen={isDialogOpen} setIsDialogOpen={setIsDialogOpen} title={title} setTitle={setTitle}
+                  url={url} setUrl={setUrl} category={category} setCategory={setCategory} bookmarks={bookmarks}
+                  setBookmarks={setBookmarks} />
           <Login />
         </div>
       </div>
 
       {/* Edit Dialog */}
       {editingBookmark && (
-        <EditBookmark
+        <EditUrl
           bookmarks={bookmarks} setBookmarks={setBookmarks} isEditDialogOpen={isEditDialogOpen}
           setIsEditDialogOpen={setIsEditDialogOpen} editingBookmark={editingBookmark}
           setEditingBookmark={setEditingBookmark} categories={categories}
@@ -229,6 +223,7 @@ export default function BookmarkManager() {
           )}
         </TabsContent>
       </Tabs>
+      <Footer />
     </div>
   )
 }

@@ -14,7 +14,7 @@ import { useState } from 'react'
 import { toast } from 'sonner'
 import { Bookmark } from '@/types/bookmark'
 
-export const EditBookmark = ({
+export const EditUrl = ({
   categories, isEditDialogOpen, setIsEditDialogOpen, bookmarks, setBookmarks, editingBookmark, setEditingBookmark
 }:
 {
