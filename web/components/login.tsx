@@ -1,6 +1,4 @@
 import { Button } from '@/components/ui/button'
-import Link from 'next/link'
-import { BookmarkSimple, SignOut } from '@phosphor-icons/react'
 import { SignInButton, useAuth, UserButton } from '@clerk/nextjs'
 import { dark } from '@clerk/themes'
 
@@ -14,7 +12,7 @@ export const Login = () => {
         </div>
       ) : (
         <SignInButton mode="modal" appearance={{ baseTheme: dark }}>
-          <Button variant="outline">Sign In</Button>
+          <Button variant="outline" className={'cursor-pointer'}>Sign In</Button>
         </SignInButton>
       )}
     </div>

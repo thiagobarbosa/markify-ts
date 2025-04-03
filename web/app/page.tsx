@@ -11,12 +11,14 @@ import Markdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import Link from 'next/link'
 import { Login } from '@/components/login'
+import { useAuth } from '@clerk/nextjs'
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(false)
   const [markdown, setMarkdown] = useState('')
   const [url, setUrl] = useState('')
   const [error, setError] = useState('')
+  const { isSignedIn } = useAuth()
 
   // Function to validate URL
   const isValidUrl = (urlString: string) => {
@@ -88,12 +90,14 @@ export default function Home() {
               </div>
             </div>
           </Link>
-          <Button asChild className="gap-2 ml-auto mr-4">
-            <Link href="/dashboard">
-              <BookmarkSimple className="h-4 w-4" />
-              Dashboard
-            </Link>
-          </Button>
+          {isSignedIn && (
+            <Button asChild className="gap-2 ml-auto mr-4">
+              <Link href="/dashboard">
+                <BookmarkSimple className="h-4 w-4" />
+                Dashboard
+              </Link>
+            </Button>
+          )}
           <Login />
         </div>
         <ol
