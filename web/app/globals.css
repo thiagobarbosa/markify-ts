@@ -119,3 +119,8 @@
     @apply bg-background text-foreground;
   }
 }
+
+.reactMarkDown a {
+  text-decoration: underline;
+  text-underline-offset: 6px;
+}

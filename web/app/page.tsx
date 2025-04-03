@@ -7,9 +7,9 @@ import { Copy } from '@phosphor-icons/react'
 import { Button } from '@/components/ui/button'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { Loader } from '@/components/ui/loader'
+import { Alert, AlertDescription } from '@/components/ui/alert'
 import Markdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
-import { Alert, AlertDescription } from '@/components/ui/alert'
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(false)
@@ -136,9 +136,9 @@ export default function Home() {
 
       {markdown && (
         <section
-          className="w-full max-w-[900px] mx-auto max-h-[400px] overflow-auto p-8 my-8 bg-white dark:bg-black/[.85] rounded-lg shadow-lg">
+          className="w-full max-w-[900px] mx-auto max-h-[400px] overflow-auto px-8 my-8 bg-white dark:bg-black/[.85] rounded-lg shadow-lg">
           <div
-            className="relative flex items-center justify-end gap-2 text-black/[.5] dark:text-white/[.5] cursor-pointer">
+            className="relative top-4 right-0 flex items-center justify-end gap-2 text-black/[.5] dark:text-white/[.5] cursor-pointer">
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -148,8 +148,12 @@ export default function Home() {
               </Tooltip>
             </TooltipProvider>
           </div>
-          <pre className="h-fit text-sm/6 whitespace-pre-wrap break-words">
-            <Markdown remarkPlugins={[remarkGfm]}>{markdown}</Markdown>
+          <pre className="h-fit text-sm/6 whitespace-pre-wrap break-words reactMarkDown">
+          {/*<SyntaxHighlighter language="markdown" style={vs2015}>*/}
+            <Markdown remarkPlugins={[remarkGfm]}>
+            {markdown}
+            </Markdown>
+            {/*</SyntaxHighlighter>*/}
           </pre>
         </section>
       )}
