@@ -1,6 +1,6 @@
 {
   "name": "markify-ts",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Convert web pages and HTML snippets into Markdown content",
   "type": "module",
   "main": "dist/index.js",
