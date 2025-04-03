@@ -2,7 +2,7 @@
 import Image from 'next/image'
 import { Input } from '@/components/ui/input'
 import { ChangeEvent, useState } from 'react'
-import Footer from '@/components/Footer'
+import Footer from '@/components/footer'
 import { Copy } from '@phosphor-icons/react'
 import { Button } from '@/components/ui/button'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'

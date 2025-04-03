@@ -5,6 +5,8 @@ import { ThemeProvider } from '@/components/theme-provider'
 import { cookies } from 'next/headers'
 import { cn } from '@/lib/utils'
 import { ActiveThemeProvider } from '@/components/active-theme'
+import { Toaster } from 'sonner'
+import type React from 'react'
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -50,6 +52,7 @@ export default async function RootLayout({
     >
       <ActiveThemeProvider initialTheme={activeThemeValue}>
         {children}
+        <Toaster />
       </ActiveThemeProvider>
     </ThemeProvider>
     </body>
