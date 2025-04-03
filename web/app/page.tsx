@@ -7,6 +7,8 @@ import { Copy } from '@phosphor-icons/react'
 import { Button } from '@/components/ui/button'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { Loader } from '@/components/ui/loader'
+import Markdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(false)
@@ -88,12 +90,12 @@ export default function Home() {
                 <TooltipTrigger asChild>
                   <Copy size={32} onClick={() => navigator.clipboard.writeText(markdown)} />
                 </TooltipTrigger>
-                <TooltipContent>Copy Markdown</TooltipContent>
+                <TooltipContent>Copy Markdown code</TooltipContent>
               </Tooltip>
             </TooltipProvider>
           </div>
-          <pre className="h-fit text-sm/6 whitespace-pre-wrap break-all">
-          {markdown}
+          <pre className="h-fit text-sm/6 whitespace-pre-wrap break-words">
+          <Markdown remarkPlugins={[remarkGfm]}>{markdown}</Markdown>
           </pre>
         </section>
       )}
