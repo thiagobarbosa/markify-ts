@@ -1,17 +1,21 @@
 'use client'
-import Image from 'next/image'
 import { Input } from '@/components/ui/input'
 import { ChangeEvent, useState } from 'react'
 import Footer from '@/components/footer'
-import { Copy } from '@phosphor-icons/react'
+import { BookmarkSimple, Copy, SignOut } from '@phosphor-icons/react'
 import { Button } from '@/components/ui/button'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { Loader } from '@/components/ui/loader'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import Markdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
+import { SignInButton, useAuth, UserButton } from '@clerk/nextjs'
+import Link from 'next/link'
+import { dark } from '@clerk/themes'
+import { Login } from '@/components/login'
 
 export default function Home() {
+  const { isSignedIn } = useAuth()
   const [isLoading, setIsLoading] = useState(false)
   const [markdown, setMarkdown] = useState('')
   const [url, setUrl] = useState('')
@@ -69,15 +73,32 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="container min-h-screen flex flex-col mx-auto my-8">
       <div className="flex flex-col items-center justify-center gap-8 font-[family-name:var(--font-geist-sans)]">
-        <Image
-          src="/markify.png"
-          alt="Markify logo"
-          width={216}
-          height={45}
-          priority
-        />
+        <div className="flex justify-between items-center w-full p-6">
+          <Link href={'/'} className="hidden md:flex">
+            <div className="flex">
+              <img
+                src="/markify-logo.png"
+                alt="Markify logo"
+                className="h-10 w-auto mr-2"
+              />
+              <div className="flex flex-col">
+                <h1 className="text-3xl font-bold font-mono">Markify</h1>
+                <p className="text-base text-muted-foreground">
+                  transform web pages into markdown code
+                </p>
+              </div>
+            </div>
+          </Link>
+          <Button asChild className="gap-2 ml-auto mr-4">
+            <Link href="/dashboard">
+              <BookmarkSimple className="h-4 w-4" />
+              My Bookmarks
+            </Link>
+          </Button>
+         <Login />
+        </div>
         <ol
           className="text-lg text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
           <li className="tracking-[-.01em]">

@@ -7,6 +7,7 @@ import { cn } from '@/lib/utils'
 import { ActiveThemeProvider } from '@/components/active-theme'
 import { Toaster } from 'sonner'
 import type React from 'react'
+import { ClerkProvider } from '@clerk/nextjs'
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -36,26 +37,28 @@ export default async function RootLayout({
   const cookieStore = await cookies()
   const activeThemeValue = cookieStore.get('active_theme')?.value
   return (
-    <html lang="en" suppressHydrationWarning>
-    <body
-      className={cn(
-        'bg-background overscroll-none font-sans antialiased',
-        activeThemeValue ? `theme-${activeThemeValue}` : '',
-        fontVariables,
-      )}
-    >
-    <ThemeProvider
-      attribute="class"
-      defaultTheme="dark"
-      disableTransitionOnChange
-      enableColorScheme
-    >
-      <ActiveThemeProvider initialTheme={activeThemeValue}>
-        {children}
-        <Toaster />
-      </ActiveThemeProvider>
-    </ThemeProvider>
-    </body>
-    </html>
+    <ClerkProvider>
+      <html lang="en" suppressHydrationWarning>
+      <body
+        className={cn(
+          'bg-background overscroll-none font-sans antialiased',
+          activeThemeValue ? `theme-${activeThemeValue}` : '',
+          fontVariables,
+        )}
+      >
+      <ThemeProvider
+        attribute="class"
+        defaultTheme="dark"
+        disableTransitionOnChange
+        enableColorScheme
+      >
+        <ActiveThemeProvider initialTheme={activeThemeValue}>
+          {children}
+          <Toaster />
+        </ActiveThemeProvider>
+      </ThemeProvider>
+      </body>
+      </html>
+    </ClerkProvider>
   )
 }

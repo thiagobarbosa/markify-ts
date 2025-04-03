@@ -11,6 +11,9 @@ import { toast } from 'sonner'
 import { AddBookmark } from '@/components/add-bookmark'
 import { EditBookmark } from '@/components/edit-bookmark'
 import { Bookmark } from '@/types/bookmark'
+import { useClerk, useUser } from '@clerk/nextjs'
+import Link from 'next/link'
+import { Login } from '@/components/login'
 
 const categories = {
   general: 'General',
@@ -25,6 +28,9 @@ const categories = {
 }
 
 export default function BookmarkManager() {
+  const { user } = useUser()
+  const { signOut } = useClerk()
+
   const [bookmarks, setBookmarks] = useState<Bookmark[]>([])
   const [title, setTitle] = useState('')
   const [url, setUrl] = useState('')
@@ -35,18 +41,24 @@ export default function BookmarkManager() {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
   const [activeTab, setActiveTab] = useState('all')
 
-  // Load bookmarks from localStorage on component mount
+  // Load bookmarks from localStorage on component mount with user ID
   useEffect(() => {
-    const savedBookmarks = localStorage.getItem('bookmarks')
-    if (savedBookmarks) {
-      setBookmarks(JSON.parse(savedBookmarks))
+    if (user) {
+      const userId = user.id
+      const savedBookmarks = localStorage.getItem(`bookmarks_${userId}`)
+      if (savedBookmarks) {
+        setBookmarks(JSON.parse(savedBookmarks))
+      }
     }
-  }, [])
+  }, [user])
 
   // Save bookmarks to localStorage whenever they change
   useEffect(() => {
-    localStorage.setItem('bookmarks', JSON.stringify(bookmarks))
-  }, [bookmarks])
+    if (user) {
+      const userId = user.id
+      localStorage.setItem(`bookmarks_${userId}`, JSON.stringify(bookmarks))
+    }
+  }, [bookmarks, user])
 
   // Get unique categories from bookmarks
   const uniqueCategories = ['all', ...new Set(bookmarks.map((bookmark) => bookmark.category))]
@@ -82,23 +94,25 @@ export default function BookmarkManager() {
   }
 
   return (
-    <div className="container mx-auto py-8 px-6">
-      <div className="flex flex-col items-center justify-between space-y-4 md:flex-row md:space-y-0 mb-8">
-        <div className="flex ">
-          <img
-            src="/markify-logo.png"
-            alt="Markify logo"
-            className="h-10 w-auto mr-2"
-          />
-          <div className="flex flex-col">
-            <h1 className="text-3xl font-bold font-mono">Markify</h1>
-            <p className="text-base text-muted-foreground">
-              transform web pages into markdown code
-            </p>
+    <div className="container min-h-screen flex flex-col mx-auto my-8 p-6">
+      <div className="flex justify-between items-center w-full">
+        <Link href={'/'} className="hidden md:flex">
+          <div className="flex">
+            <img
+              src="/markify-logo.png"
+              alt="Markify logo"
+              className="h-10 w-auto mr-2"
+            />
+            <div className="flex flex-col">
+              <h1 className="text-3xl font-bold font-mono">Markify</h1>
+              <p className="text-base text-muted-foreground">
+                transform web pages into markdown code
+              </p>
+            </div>
           </div>
-        </div>
+        </Link>
 
-        <div className="flex w-full md:w-auto space-x-2">
+        <div className="flex items-center w-full md:w-auto space-x-2">
           <div className="relative w-full md:w-64">
             <MagnifyingGlass className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input
@@ -113,6 +127,7 @@ export default function BookmarkManager() {
           <AddBookmark isDialogOpen={isDialogOpen} setIsDialogOpen={setIsDialogOpen} title={title} setTitle={setTitle}
                        url={url} setUrl={setUrl} category={category} setCategory={setCategory} bookmarks={bookmarks}
                        setBookmarks={setBookmarks} />
+          <Login />
         </div>
       </div>
 
@@ -126,7 +141,7 @@ export default function BookmarkManager() {
       )}
 
       {/* Category Tabs */}
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-6">
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="my-8">
         <TabsList className="mb-4 flex flex-wrap">
           {uniqueCategories.map((cat) => (
             <TabsTrigger key={cat} value={cat} className="capitalize">
