@@ -26,38 +26,63 @@ export const EditBookmark = ({
   editingBookmark: Bookmark;
   setEditingBookmark: (bookmark: Bookmark | null) => void;
 }) => {
+  const [isLoading, setIsLoading] = useState(false)
   const [title, setTitle] = useState(editingBookmark.title)
   const [url, setUrl] = useState(editingBookmark.url)
   const [category, setCategory] = useState(editingBookmark.category)
 
-  const updateBookmark = () => {
+  const updateBookmark = async () => {
+    setIsLoading(true)
     if (!editingBookmark) return
 
-    const updatedBookmarks = bookmarks.map((bookmark) =>
-      bookmark.id === editingBookmark.id
-        ? {
-          ...bookmark,
-          title,
-          url: url.startsWith('http') ? url : `https://${url}`,
-          category,
+    try {
+      const existingBookmark = bookmarks.find((bookmark) => bookmark.id === editingBookmark.id)
+      if (!existingBookmark) {
+        toast.error('Bookmark not found')
+        return
+      }
+
+      const updatedBookmark = {
+        ...existingBookmark,
+        title,
+        url,
+        category
+      }
+
+      if (existingBookmark.url !== url) {
+        console.log('Updating markdown')
+        const response = await fetch(`/api/markify?url=${encodeURIComponent(url)}`)
+        if (!response.ok) {
+          throw new Error(`Error: ${response.status} ${response.statusText}`)
         }
-        : bookmark,
-    )
 
-    setBookmarks(updatedBookmarks)
-    setEditingBookmark(null)
-    setTitle('')
-    setUrl('')
-    setCategory('general')
-    setIsEditDialogOpen(false)
+        const result = await response.json()
+        updatedBookmark.markdown = result.markdown
+      }
 
-    toast.success('Bookmark updated', {
-      description: 'Your bookmark has been updated successfully'
-    })
+      setBookmarks(
+        bookmarks.map((bookmark) => (bookmark.id === editingBookmark.id ? updatedBookmark : bookmark))
+      )
+      setEditingBookmark(null)
+      setTitle('')
+      setUrl('')
+      setCategory('general')
+      setIsEditDialogOpen(false)
+
+      toast.success('Bookmark updated', {
+        description: 'Your bookmark has been updated successfully'
+      })
+    } catch (error: any) {
+      console.error('Error updating bookmark:', error)
+      toast.error('Error updating bookmark', {
+        description: 'Please try again later.'
+      })
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   if (!editingBookmark) return null
-
 
   return (
     <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
@@ -105,7 +130,10 @@ export const EditBookmark = ({
           <Button variant="outline" onClick={() => setIsEditDialogOpen(false)}>
             Cancel
           </Button>
-          <Button onClick={updateBookmark}>Update Bookmark</Button>
+          <Button onClick={updateBookmark} disabled={isLoading} className={'w-36'}>
+            {!isLoading && <span>Update Bookmark</span>}
+            {isLoading && <span>Updating...</span>}
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

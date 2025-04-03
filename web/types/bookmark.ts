@@ -4,4 +4,5 @@ export type Bookmark = {
   url: string
   category: string
   createdAt: string
+  markdown?: string
 }

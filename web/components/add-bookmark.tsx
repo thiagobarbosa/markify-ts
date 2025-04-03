@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import {
   Dialog,
   DialogContent,
@@ -38,35 +39,57 @@ export const AddBookmark = ({
   bookmarks: Bookmark[];
   setBookmarks: (bookmarks: Bookmark[]) => void;
 }) => {
-  const addBookmark = () => {
-    if (!title || !url) {
-      toast.error('Please fill in all fields')
-      return
+  const [isLoading, setIsLoading] = useState(false)
+
+  const addBookmark = async () => {
+    setIsLoading(true)
+    try {
+      if (!title || !url) {
+        toast.error('Please fill in all fields')
+        return
+      }
+
+      // Add http:// if not present
+      let formattedUrl = url
+      if (!formattedUrl.startsWith('http://') && !formattedUrl.startsWith('https://')) {
+        formattedUrl = 'https://' + formattedUrl
+      }
+
+
+      const response = await fetch(`/api/markify?url=${encodeURIComponent(url)}`)
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status} ${response.statusText}`)
+      }
+
+      const result = await response.json()
+      const markdown = result.markdown
+
+      const newBookmark: Bookmark = {
+        id: Date.now().toString(),
+        title,
+        url: formattedUrl,
+        category,
+        createdAt: new Date().toISOString(),
+        markdown
+      }
+
+      setBookmarks([...bookmarks, newBookmark])
+      setTitle('')
+      setUrl('')
+      setCategory('general')
+      setIsDialogOpen(false)
+
+      toast.success('Bookmark added', {
+        description: 'Your bookmark has been saved successfully',
+      })
+    } catch (error: any) {
+      console.error('Error adding bookmark:', error)
+      toast.error('Failed to add bookmark', {
+        description: 'Please try again later or with a different URL',
+      })
+    } finally {
+      setIsLoading(false)
     }
-
-    // Add http:// if not present
-    let formattedUrl = url
-    if (!formattedUrl.startsWith('http://') && !formattedUrl.startsWith('https://')) {
-      formattedUrl = 'https://' + formattedUrl
-    }
-
-    const newBookmark: Bookmark = {
-      id: Date.now().toString(),
-      title,
-      url: formattedUrl,
-      category,
-      createdAt: new Date().toISOString(),
-    }
-
-    setBookmarks([...bookmarks, newBookmark])
-    setTitle('')
-    setUrl('')
-    setCategory('general')
-    setIsDialogOpen(false)
-
-    toast.success('Bookmark added', {
-      description: 'Your bookmark has been saved successfully',
-    })
   }
 
   return (
@@ -125,7 +148,10 @@ export const AddBookmark = ({
           <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
             Cancel
           </Button>
-          <Button onClick={addBookmark}>Save Bookmark</Button>
+          <Button onClick={addBookmark} disabled={isLoading} className={'w-36'}>
+            {!isLoading && <span>Save Bookmark</span>}
+            {isLoading && <span>Saving...</span>}
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

@@ -190,7 +190,13 @@ export default function BookmarkManager() {
 
                     <div className="flex items-center space-x-4">
 
-                      <Button variant="default" size="sm" onClick={() => window.open(bookmark.url, '_blank')}
+                      <Button variant="default" size="sm" onClick={() => {
+                        navigator.clipboard.writeText(bookmark.markdown || '').then(() => {
+                          toast.success('Markdown copied to clipboard', {
+                            description: 'You can now paste it anywhere'
+                          })
+                        })
+                      }}
                               className={'cursor-pointer px-2 w-fit'}>
                         Copy markdown
                       </Button>
