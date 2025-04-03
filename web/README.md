@@ -1,6 +1,7 @@
 # Markify Web
 
-Web application that extracts clean, structured markdown from any URL. It provides a simple and intuitive interface for users to convert web content to markdown format.
+Web application that extracts clean, structured markdown from any URL. It provides a simple and intuitive interface for
+users to convert web content to markdown format.
 
 ## Getting Started
 
@@ -13,6 +14,8 @@ npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) to see the application.
+
+![screenshot.png](public/screenshot.png)
 
 ## Tech Stack
 
