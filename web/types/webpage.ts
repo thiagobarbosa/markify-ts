@@ -1,4 +1,4 @@
-export type Bookmark = {
+export type Webpage = {
   id: string
   title: string
   url: string

@@ -14,7 +14,7 @@ import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { toast } from 'sonner'
-import { Bookmark } from '@/types/bookmark'
+import { Webpage } from '@/types/webpage'
 
 export const AddUrl = ({
   isDialogOpen,
@@ -25,8 +25,8 @@ export const AddUrl = ({
   setUrl,
   category,
   setCategory,
-  bookmarks,
-  setBookmarks
+  webpages,
+  setWebpages
 }: {
   isDialogOpen: boolean;
   setIsDialogOpen: (open: boolean) => void;
@@ -36,12 +36,12 @@ export const AddUrl = ({
   setUrl: (url: string) => void;
   category: string;
   setCategory: (category: string) => void;
-  bookmarks: Bookmark[];
-  setBookmarks: (bookmarks: Bookmark[]) => void;
+  webpages: Webpage[];
+  setWebpages: (webpages: Webpage[]) => void;
 }) => {
   const [isLoading, setIsLoading] = useState(false)
 
-  const addBookmark = async () => {
+  const addWebpage = async () => {
     setIsLoading(true)
     try {
       if (!title || !url) {
@@ -64,7 +64,7 @@ export const AddUrl = ({
       const result = await response.json()
       const markdown = result.markdown
 
-      const newBookmark: Bookmark = {
+      const newWebpage: Webpage = {
         id: Date.now().toString(),
         title,
         url: formattedUrl,
@@ -73,18 +73,18 @@ export const AddUrl = ({
         markdown
       }
 
-      setBookmarks([...bookmarks, newBookmark])
+      setWebpages([...webpages, newWebpage])
       setTitle('')
       setUrl('')
       setCategory('general')
       setIsDialogOpen(false)
 
-      toast.success('Bookmark added', {
-        description: 'Your bookmark has been saved successfully',
+      toast.success('Page added', {
+        description: 'Your page has been saved successfully',
       })
     } catch (error: any) {
-      console.error('Error adding bookmark:', error)
-      toast.error('Failed to add bookmark', {
+      console.error('Error adding page:', error)
+      toast.error('Failed to add page', {
         description: 'Please try again later or with a different URL',
       })
     } finally {
@@ -148,7 +148,7 @@ export const AddUrl = ({
           <Button variant="link" onClick={() => setIsDialogOpen(false)}>
             Cancel
           </Button>
-          <Button onClick={addBookmark} disabled={isLoading} className={'w-36'}>
+          <Button onClick={addWebpage} disabled={isLoading} className={'w-36'}>
             {!isLoading && <span>Save page</span>}
             {isLoading && <span>Saving...</span>}
           </Button>

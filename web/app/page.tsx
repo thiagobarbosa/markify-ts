@@ -9,12 +9,10 @@ import { Loader } from '@/components/ui/loader'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import Markdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
-import { useAuth } from '@clerk/nextjs'
 import Link from 'next/link'
 import { Login } from '@/components/login'
 
 export default function Home() {
-  const { isSignedIn } = useAuth()
   const [isLoading, setIsLoading] = useState(false)
   const [markdown, setMarkdown] = useState('')
   const [url, setUrl] = useState('')
@@ -93,7 +91,7 @@ export default function Home() {
           <Button asChild className="gap-2 ml-auto mr-4">
             <Link href="/dashboard">
               <BookmarkSimple className="h-4 w-4" />
-              My Bookmarks
+              Dashboard
             </Link>
           </Button>
           <Login />

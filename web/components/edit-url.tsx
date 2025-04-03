@@ -12,69 +12,68 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Button } from '@/components/ui/button'
 import { useState } from 'react'
 import { toast } from 'sonner'
-import { Bookmark } from '@/types/bookmark'
+import { Webpage } from '@/types/webpage'
 
 export const EditUrl = ({
-  categories, isEditDialogOpen, setIsEditDialogOpen, bookmarks, setBookmarks, editingBookmark, setEditingBookmark
+  categories, isEditDialogOpen, setIsEditDialogOpen, webpages, setWebpages, editingWebpage, setEditingWebpage
 }:
 {
   categories: Record<string, string>;
   isEditDialogOpen: boolean;
   setIsEditDialogOpen: (open: boolean) => void;
-  bookmarks: Bookmark[];
-  setBookmarks: (bookmarks: Bookmark[]) => void;
-  editingBookmark: Bookmark;
-  setEditingBookmark: (bookmark: Bookmark | null) => void;
+  webpages: Webpage[];
+  setWebpages: (webpages: Webpage[]) => void;
+  editingWebpage: Webpage;
+  setEditingWebpage: (webpage: Webpage | null) => void;
 }) => {
   const [isLoading, setIsLoading] = useState(false)
-  const [title, setTitle] = useState(editingBookmark.title)
-  const [url, setUrl] = useState(editingBookmark.url)
-  const [category, setCategory] = useState(editingBookmark.category)
+  const [title, setTitle] = useState(editingWebpage.title)
+  const [url, setUrl] = useState(editingWebpage.url)
+  const [category, setCategory] = useState(editingWebpage.category)
 
-  const updateBookmark = async () => {
+  const updateWebpage = async () => {
     setIsLoading(true)
-    if (!editingBookmark) return
+    if (!editingWebpage) return
 
     try {
-      const existingBookmark = bookmarks.find((bookmark) => bookmark.id === editingBookmark.id)
-      if (!existingBookmark) {
-        toast.error('Bookmark not found')
+      const existingWebpage = webpages.find((page) => page.id === editingWebpage.id)
+      if (!existingWebpage) {
+        toast.error('Page not found')
         return
       }
 
-      const updatedBookmark = {
-        ...existingBookmark,
+      const updatedWebpage = {
+        ...existingWebpage,
         title,
         url,
         category
       }
 
-      if (existingBookmark.url !== url) {
-        console.log('Updating markdown')
+      if (existingWebpage.url !== url) {
         const response = await fetch(`/api/markify?url=${encodeURIComponent(url)}`)
         if (!response.ok) {
           throw new Error(`Error: ${response.status} ${response.statusText}`)
         }
 
         const result = await response.json()
-        updatedBookmark.markdown = result.markdown
+        updatedWebpage.markdown = result.markdown
       }
 
-      setBookmarks(
-        bookmarks.map((bookmark) => (bookmark.id === editingBookmark.id ? updatedBookmark : bookmark))
+      setWebpages(
+        webpages.map((page) => (page.id === editingWebpage.id ? updatedWebpage : page))
       )
-      setEditingBookmark(null)
+      setEditingWebpage(null)
       setTitle('')
       setUrl('')
       setCategory('general')
       setIsEditDialogOpen(false)
 
-      toast.success('Bookmark updated', {
-        description: 'Your bookmark has been updated successfully'
+      toast.success('Page updated', {
+        description: 'Your page has been updated successfully.'
       })
     } catch (error: any) {
-      console.error('Error updating bookmark:', error)
-      toast.error('Error updating bookmark', {
+      console.error('Error updating page:', error)
+      toast.error('Error updating page', {
         description: 'Please try again later.'
       })
     } finally {
@@ -82,7 +81,7 @@ export const EditUrl = ({
     }
   }
 
-  if (!editingBookmark) return null
+  if (!editingWebpage) return null
 
   return (
     <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
@@ -130,7 +129,7 @@ export const EditUrl = ({
           <Button variant="link" onClick={() => setIsEditDialogOpen(false)}>
             Cancel
           </Button>
-          <Button onClick={updateBookmark} disabled={isLoading} className={'min-w-36'}>
+          <Button onClick={updateWebpage} disabled={isLoading} className={'min-w-36'}>
             {!isLoading && <span>Update page</span>}
             {isLoading && <span>Updating...</span>}
           </Button>

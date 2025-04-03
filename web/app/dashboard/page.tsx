@@ -10,7 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { toast } from 'sonner'
 import { AddUrl } from '@/components/add-url'
 import { EditUrl } from '@/components/edit-url'
-import { Bookmark } from '@/types/bookmark'
+import { Webpage } from '@/types/webpage'
 import Link from 'next/link'
 import { Login } from '@/components/login'
 import Footer from '@/components/footer'
@@ -27,54 +27,54 @@ const categories = {
   other: 'Other',
 }
 
-export default function BookmarkManager() {
-  const [bookmarks, setBookmarks] = useState<Bookmark[]>([])
+export default function DashboardPage() {
+  const [webpages, setWebpages] = useState<Webpage[]>([])
   const [title, setTitle] = useState('')
   const [url, setUrl] = useState('')
   const [category, setCategory] = useState('general')
   const [searchTerm, setSearchTerm] = useState('')
-  const [editingBookmark, setEditingBookmark] = useState<Bookmark | null>(null)
+  const [editingWebpage, setEditingWebpage] = useState<Webpage | null>(null)
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
   const [activeTab, setActiveTab] = useState('all')
 
-  // Load bookmarks from localStorage on component mount with user ID
+  // load webpages from localStorage on initial render
   useEffect(() => {
-    const savedBookmarks = localStorage.getItem('bookmarks')
-    if (savedBookmarks) {
-      setBookmarks(JSON.parse(savedBookmarks))
+    const savedWebpages = localStorage.getItem('webpages')
+    if (savedWebpages) {
+      setWebpages(JSON.parse(savedWebpages))
     }
   }, [])
 
-  // Save bookmarks to localStorage whenever they change
+  // save webpages to localStorage whenever they change
   useEffect(() => {
-    if (!bookmarks.length) return
-    localStorage.setItem('bookmarks', JSON.stringify(bookmarks))
-  }, [bookmarks])
+    if (!webpages.length) return
+    localStorage.setItem('webpages', JSON.stringify(webpages))
+  }, [webpages])
 
-  // Get unique categories from bookmarks
-  const uniqueCategories = ['all', ...new Set(bookmarks.map((bookmark) => bookmark.category))]
+  // get unique categories from web pages
+  const uniqueCategories = ['all', ...new Set(webpages.map((page) => page.category))]
 
-  // Filter bookmarks based on search term and active tab
-  const filteredBookmarks = bookmarks.filter((bookmark) => {
+  // filter webpages based on search term and active tab
+  const filteredWebpages = webpages.filter((page) => {
     const matchesSearch =
-      bookmark.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      bookmark.url.toLowerCase().includes(searchTerm.toLowerCase())
-    const matchesCategory = activeTab === 'all' || bookmark.category === activeTab
+      page.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      page.url.toLowerCase().includes(searchTerm.toLowerCase())
+    const matchesCategory = activeTab === 'all' || page.category === activeTab
     return matchesSearch && matchesCategory
   })
 
-  const deleteBookmark = (id: string) => {
-    const updatedBookmarks = bookmarks.filter((bookmark) => bookmark.id !== id)
-    setBookmarks(updatedBookmarks)
-    localStorage.setItem('bookmarks', JSON.stringify(updatedBookmarks))
-    toast.success('Bookmark deleted', {
-      description: 'Your bookmark has been removed',
+  const deleteWebpage = (id: string) => {
+    const updatedPages = webpages.filter((page) => page.id !== id)
+    setWebpages(updatedPages)
+    localStorage.setItem('webpages', JSON.stringify(updatedPages))
+    toast.success('Page deleted', {
+      description: 'Your page has been removed',
     })
   }
 
-  const startEditBookmark = (bookmark: Bookmark) => {
-    setEditingBookmark(bookmark)
+  const startEditWebpage = (page: Webpage) => {
+    setEditingWebpage(page)
     setIsEditDialogOpen(true)
   }
 
@@ -119,18 +119,18 @@ export default function BookmarkManager() {
           </div>
 
           <AddUrl isDialogOpen={isDialogOpen} setIsDialogOpen={setIsDialogOpen} title={title} setTitle={setTitle}
-                  url={url} setUrl={setUrl} category={category} setCategory={setCategory} bookmarks={bookmarks}
-                  setBookmarks={setBookmarks} />
+                  url={url} setUrl={setUrl} category={category} setCategory={setCategory} webpages={webpages}
+                  setWebpages={setWebpages} />
           <Login />
         </div>
       </div>
 
       {/* Edit Dialog */}
-      {editingBookmark && (
+      {editingWebpage && (
         <EditUrl
-          bookmarks={bookmarks} setBookmarks={setBookmarks} isEditDialogOpen={isEditDialogOpen}
-          setIsEditDialogOpen={setIsEditDialogOpen} editingBookmark={editingBookmark}
-          setEditingBookmark={setEditingBookmark} categories={categories}
+          webpages={webpages} setWebpages={setWebpages} isEditDialogOpen={isEditDialogOpen}
+          setIsEditDialogOpen={setIsEditDialogOpen} editingWebpage={editingWebpage}
+          setEditingWebpage={setEditingWebpage} categories={categories}
         />
       )}
 
@@ -144,27 +144,27 @@ export default function BookmarkManager() {
           ))}
         </TabsList>
 
-        {/* Bookmarks Grid */}
+        {/* Web pages Grid */}
         <TabsContent value={activeTab} className="mt-0">
-          {filteredBookmarks.length === 0 ? (
+          {filteredWebpages.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-12 text-center">
               <BookmarkIcon className="h-12 w-12 text-muted-foreground mb-4" />
-              <h3 className="text-xl font-medium">No bookmarks found</h3>
+              <h3 className="text-xl font-medium">No pages found</h3>
               <p className="text-muted-foreground mt-2">
                 {searchTerm
                   ? 'Try a different search term or category'
-                  : 'Add your first bookmark by clicking the \'Add Bookmark\' button'}
+                  : 'Add your first page by clicking the \'Add page\' button'}
               </p>
             </div>
           ) : (
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-              {filteredBookmarks.map((bookmark) => (
-                <Card key={bookmark.id} className="overflow-hidden">
+              {filteredWebpages.map((webpage) => (
+                <Card key={webpage.id} className="overflow-hidden">
                   <CardHeader className="pb-2">
                     <div className="flex items-start justify-between">
                       <div className="flex items-center">
                         <img
-                          src={getFaviconUrl(bookmark.url) || '/placeholder.svg'}
+                          src={getFaviconUrl(webpage.url) || '/placeholder.svg'}
                           alt=""
                           className="h-6 w-6 mr-2 rounded-sm"
                           onError={(e) => {
@@ -172,31 +172,31 @@ export default function BookmarkManager() {
                               'https://www.google.com/s2/favicons?domain=example.com&sz=64'
                           }}
                         />
-                        <CardTitle className="text-lg truncate" title={bookmark.title}>
-                          {bookmark.title}
+                        <CardTitle className="text-lg truncate" title={webpage.title}>
+                          {webpage.title}
                         </CardTitle>
                       </div>
                     </div>
-                    <CardDescription className="truncate mt-1" title={bookmark.url}>
-                      {bookmark.url}
+                    <CardDescription className="truncate mt-1" title={webpage.url}>
+                      {webpage.url}
                     </CardDescription>
                   </CardHeader>
                   <CardContent className="pb-2">
                     <Badge variant="secondary" className="capitalize">
-                      {bookmark.category}
+                      {webpage.category}
                     </Badge>
                   </CardContent>
                   <CardFooter className="flex justify-between pt-2">
                     <div className="flex space-x-2">
-                      <Button variant="outline" size="icon" onClick={() => startEditBookmark(bookmark)}>
+                      <Button variant="outline" size="icon" onClick={() => startEditWebpage(webpage)}>
                         <NotePencil className="h-4 w-4" />
                         <span className="sr-only">Edit</span>
                       </Button>
-                      <Button variant="outline" size="icon" onClick={() => deleteBookmark(bookmark.id)}>
+                      <Button variant="outline" size="icon" onClick={() => deleteWebpage(webpage.id)}>
                         <Trash className="h-4 w-4" />
                         <span className="sr-only">Delete</span>
                       </Button>
-                      <Button variant="outline" size="icon" onClick={() => window.open(bookmark.url, '_blank')}
+                      <Button variant="outline" size="icon" onClick={() => window.open(webpage.url, '_blank')}
                               className={'cursor-pointer px-2'}>
                         <ArrowCircleUpRight weight={'regular'} />
                         <span className="sr-only">Open</span>
@@ -206,7 +206,7 @@ export default function BookmarkManager() {
                     <div className="flex items-center space-x-4">
 
                       <Button variant="default" size="sm" onClick={() => {
-                        navigator.clipboard.writeText(bookmark.markdown || '').then(() => {
+                        navigator.clipboard.writeText(webpage.markdown || '').then(() => {
                           toast.success('Markdown copied to clipboard', {
                             description: 'You can now paste it anywhere'
                           })
