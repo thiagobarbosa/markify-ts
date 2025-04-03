@@ -74,7 +74,7 @@ Ignore all elements with id equals to 'banner'
 
 # Clone the repository
 git clone "https://github.com/thiagobarbosa/markify-ts.git"
-cd markify
+cd markify-ts/markify
 
 # Install dependencies
 npm install
