@@ -1,7 +1,7 @@
 'use client'
 import Image from 'next/image'
 import { Input } from '@/components/ui/input'
-import { useState } from 'react'
+import { ChangeEvent, useState } from 'react'
 import Footer from '@/components/Footer'
 import { Copy } from '@phosphor-icons/react'
 import { Button } from '@/components/ui/button'
@@ -9,28 +9,73 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { Loader } from '@/components/ui/loader'
 import Markdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
+import { Alert, AlertDescription } from '@/components/ui/alert'
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(false)
   const [markdown, setMarkdown] = useState('')
   const [url, setUrl] = useState('')
+  const [error, setError] = useState('')
+
+  // Function to validate URL
+  const isValidUrl = (urlString: string) => {
+    try {
+      const url = new URL(urlString)
+      return url.protocol === 'http:' || url.protocol === 'https:'
+    } catch (e: any) {
+      return false
+    }
+  }
 
   const handleSubmit = async () => {
+    // Reset error state
+    setError('')
+
+    // Validate URL before submitting
+    if (!isValidUrl(url)) {
+      setError('Please enter a valid URL starting with http:// or https://')
+      return
+    }
+
     setIsLoading(true)
-    const result = await fetch(`/api/markify?url=${url}`).then((res) => res.json())
-    setMarkdown(result.markdown)
-    setIsLoading(false)
+
+    try {
+      const response = await fetch(`/api/markify?url=${encodeURIComponent(url)}`)
+
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status} ${response.statusText}`)
+      }
+
+      const result = await response.json()
+      setMarkdown(result.markdown)
+    } catch (e: any) {
+      setError(`Failed to fetch markdown: ${e.message}`)
+      setMarkdown('')
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setUrl(e.target.value)
+    // Clear error when user starts typing again
+    if (error) setError('')
+  }
+
+  const handleClear = () => {
+    setMarkdown('')
+    setError('')
+    setUrl('')
   }
 
   return (
     <div className="min-h-screen flex flex-col">
-      <div
-        className="flex flex-col items-center justify-center gap-8 font-[family-name:var(--font-geist-sans)]">
+      <div className="flex flex-col items-center justify-center gap-8 font-[family-name:var(--font-geist-sans)]">
         <Image
           src="/markify.png"
           alt="Markify logo"
-          width={270}
-          height={57}
+          width={216}
+          height={45}
           priority
         />
         <ol
@@ -45,20 +90,26 @@ export default function Home() {
           </li>
         </ol>
 
-        <div className="flex gap-8 items-center flex-col">
+        <div className="flex gap-8 min-w-[400px] w-full sm:w-auto items-center flex-col">
           <Input
-            className="min-w-[400px] w-full sm:w-auto h-10"
-            placeholder="Enter URL"
+            className="h-10"
+            placeholder="Enter URL (e.g., https://example.com)"
             type="url"
             required
             value={url}
-            onChange={(e) => {
-              setUrl(e.target.value)
+            onChange={handleInputChange}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && url && !isLoading) {
+                handleSubmit()
+              }
             }}
+            aria-invalid={error ? 'true' : 'false'}
           />
-          <div className={'flex items-center flex-col flex-col'}>
+
+          <div className="flex items-center flex-col gap-2">
             <Button
-              className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto w-fit cursor-pointer"
+              variant={'outline'}
+              className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 px-4 sm:px-5 sm:w-auto w-fit cursor-pointer"
               type="submit"
               disabled={!url || isLoading}
               onClick={handleSubmit}
@@ -67,22 +118,25 @@ export default function Home() {
               {isLoading && <div className="ml-4"><Loader /></div>}
             </Button>
             <Button
-              variant={'link'}
-              className="flex items-center justify-center font-medium text-base p-0 sm:w-auto w-fit cursor-pointer"
-              disabled={!markdown}
-              onClick={() => {
-                setMarkdown('')
-              }}
+              variant="link"
+              className="flex items-center justify-center font-medium text-base sm:w-auto cursor-pointer"
+              disabled={!markdown && !error && !url}
+              onClick={handleClear}
             >
               Clear
             </Button>
+            {error && (
+              <Alert variant="destructive" className="min-w-[400px] w-auto border-none text-destructive p-4">
+                <AlertDescription>{error}</AlertDescription>
+              </Alert>
+            )}
           </div>
         </div>
       </div>
 
       {markdown && (
         <section
-          className="w-full max-w-[800px] mx-auto max-h-[400px] overflow-auto p-8 bg-white dark:bg-black/[.85] rounded-lg shadow-lg">
+          className="w-full max-w-[900px] mx-auto max-h-[400px] overflow-auto p-8 my-8 bg-white dark:bg-black/[.85] rounded-lg shadow-lg">
           <div
             className="relative flex items-center justify-end gap-2 text-black/[.5] dark:text-white/[.5] cursor-pointer">
             <TooltipProvider>
@@ -95,7 +149,7 @@ export default function Home() {
             </TooltipProvider>
           </div>
           <pre className="h-fit text-sm/6 whitespace-pre-wrap break-words">
-          <Markdown remarkPlugins={[remarkGfm]}>{markdown}</Markdown>
+            <Markdown remarkPlugins={[remarkGfm]}>{markdown}</Markdown>
           </pre>
         </section>
       )}
