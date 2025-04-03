@@ -88,8 +88,8 @@ export const EditBookmark = ({
     <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Edit Bookmark</DialogTitle>
-          <DialogDescription>Update the details of your saved bookmark.</DialogDescription>
+          <DialogTitle>Edit page</DialogTitle>
+          <DialogDescription>Update the details of your saved page.</DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
           <div className="grid gap-2">
@@ -127,11 +127,11 @@ export const EditBookmark = ({
           </div>
         </div>
         <DialogFooter>
-          <Button variant="outline" onClick={() => setIsEditDialogOpen(false)}>
+          <Button variant="link" onClick={() => setIsEditDialogOpen(false)}>
             Cancel
           </Button>
-          <Button onClick={updateBookmark} disabled={isLoading} className={'w-36'}>
-            {!isLoading && <span>Update Bookmark</span>}
+          <Button onClick={updateBookmark} disabled={isLoading} className={'min-w-36'}>
+            {!isLoading && <span>Update page</span>}
             {isLoading && <span>Updating...</span>}
           </Button>
         </DialogFooter>

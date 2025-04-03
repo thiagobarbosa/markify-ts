@@ -69,9 +69,6 @@ export default function BookmarkManager() {
 
   const startEditBookmark = (bookmark: Bookmark) => {
     setEditingBookmark(bookmark)
-    // setTitle(bookmark.title)
-    // setUrl(bookmark.url)
-    // setCategory(bookmark.category)
     setIsEditDialogOpen(true)
   }
 
@@ -85,11 +82,20 @@ export default function BookmarkManager() {
   }
 
   return (
-    <div className="container mx-auto py-8 px-4">
+    <div className="container mx-auto py-8 px-6">
       <div className="flex flex-col items-center justify-between space-y-4 md:flex-row md:space-y-0 mb-8">
-        <div className="flex items-center">
-          <BookmarkIcon className="h-8 w-8 mr-2 text-primary" />
-          <h1 className="text-3xl font-bold">Bookmark Manager</h1>
+        <div className="flex ">
+          <img
+            src="/markify-logo.png"
+            alt="Markify logo"
+            className="h-10 w-auto mr-2"
+          />
+          <div className="flex flex-col">
+            <h1 className="text-3xl font-bold font-mono">Markify</h1>
+            <p className="text-base text-muted-foreground">
+              transform web pages into markdown code
+            </p>
+          </div>
         </div>
 
         <div className="flex w-full md:w-auto space-x-2">
@@ -97,7 +103,7 @@ export default function BookmarkManager() {
             <MagnifyingGlass className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input
               type="search"
-              placeholder="Search bookmarks..."
+              placeholder="Search URLs..."
               className="pl-8 w-full"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}

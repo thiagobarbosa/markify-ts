@@ -97,7 +97,7 @@ export const AddBookmark = ({
       <DialogTrigger asChild>
         <Button>
           <PlusCircle className="mr-2 h-4 w-4" />
-          Add Bookmark
+          Add page
         </Button>
       </DialogTrigger>
       <DialogContent>
@@ -145,7 +145,7 @@ export const AddBookmark = ({
           </div>
         </div>
         <DialogFooter>
-          <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
+          <Button variant="link" onClick={() => setIsDialogOpen(false)}>
             Cancel
           </Button>
           <Button onClick={addBookmark} disabled={isLoading} className={'w-36'}>
