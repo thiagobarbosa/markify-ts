@@ -1,21 +1,25 @@
 'use client'
-import Image from 'next/image'
 import { Input } from '@/components/ui/input'
 import { ChangeEvent, useState } from 'react'
-import Footer from '@/components/Footer'
-import { Copy } from '@phosphor-icons/react'
+import Footer from '@/components/footer'
+import { BookmarkSimple, Copy } from '@phosphor-icons/react'
 import { Button } from '@/components/ui/button'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { Loader } from '@/components/ui/loader'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import Markdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
+import Link from 'next/link'
+import { Login } from '@/components/login'
+import { useAuth } from '@clerk/nextjs'
+import { FeaturesSection } from '@/components/features-section'
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(false)
   const [markdown, setMarkdown] = useState('')
   const [url, setUrl] = useState('')
   const [error, setError] = useState('')
+  const { isSignedIn } = useAuth()
 
   // Function to validate URL
   const isValidUrl = (urlString: string) => {
@@ -69,15 +73,34 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <div className="flex flex-col items-center justify-center gap-8 font-[family-name:var(--font-geist-sans)]">
-        <Image
-          src="/markify.png"
-          alt="Markify logo"
-          width={216}
-          height={45}
-          priority
-        />
+    <div className="container min-h-screen max-w-5xl flex flex-col mx-auto px-6 pt-8">
+      <div className="flex flex-col items-center justify-center gap-8">
+        <div className="flex justify-between items-start lg:items-center w-full py-6">
+          <Link href={'/'} className="flex">
+            <div className="flex">
+              <img
+                src="/markify-logo.png"
+                alt="Markify logo"
+                className="h-10 w-auto mr-2"
+              />
+              <div className="flex flex-col">
+                <h1 className="text-3xl font-bold font-mono">Markify</h1>
+                <p className="text-base text-muted-foreground">
+                  transform web pages into markdown code
+                </p>
+              </div>
+            </div>
+          </Link>
+          {isSignedIn && (
+            <Button asChild className="gap-2 ml-auto mr-4">
+              <Link href="/dashboard">
+                <BookmarkSimple className="h-4 w-4" />
+                Dashboard
+              </Link>
+            </Button>
+          )}
+          <Login />
+        </div>
         <ol
           className="text-lg text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
           <li className="tracking-[-.01em]">
@@ -90,7 +113,7 @@ export default function Home() {
           </li>
         </ol>
 
-        <div className="flex gap-8 min-w-[400px] w-full sm:w-auto items-center flex-col">
+        <div className="flex gap-8 lg:min-w-[400px] w-full sm:w-auto items-center flex-col">
           <Input
             className="h-10"
             placeholder="Enter URL (e.g., https://example.com)"
@@ -149,15 +172,15 @@ export default function Home() {
             </TooltipProvider>
           </div>
           <pre className="h-fit text-sm/6 whitespace-pre-wrap break-words reactMarkDown">
-          {/*<SyntaxHighlighter language="markdown" style={vs2015}>*/}
             <Markdown remarkPlugins={[remarkGfm]}>
-            {markdown}
+              {markdown}
             </Markdown>
-            {/*</SyntaxHighlighter>*/}
           </pre>
         </section>
       )}
-
+      <div className="flex flex-col items-center justify-center gap-8 mx-auto my-12">
+        <FeaturesSection />
+      </div>
       <Footer />
     </div>
   )
