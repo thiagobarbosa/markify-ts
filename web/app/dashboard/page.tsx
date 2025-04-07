@@ -89,7 +89,7 @@ export default function DashboardPage() {
 
   return (
     <div className="container min-h-screen flex flex-col mx-auto pt-8">
-      <div className="flex justify-between items-center w-full p-6">
+      <div className="flex justify-between items-center w-full py-6">
         <Link href={'/'} className="hidden md:flex">
           <div className="flex">
             <img

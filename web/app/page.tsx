@@ -12,6 +12,7 @@ import remarkGfm from 'remark-gfm'
 import Link from 'next/link'
 import { Login } from '@/components/login'
 import { useAuth } from '@clerk/nextjs'
+import { FeaturesSection } from '@/components/features-section'
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(false)
@@ -72,10 +73,10 @@ export default function Home() {
   }
 
   return (
-    <div className="container min-h-screen flex flex-col mx-auto pt-8">
-      <div className="flex flex-col items-center justify-center gap-8 font-[family-name:var(--font-geist-sans)]">
-        <div className="flex justify-between items-center w-full p-6">
-          <Link href={'/'} className="hidden md:flex">
+    <div className="container min-h-screen max-w-5xl flex flex-col mx-auto px-6 pt-8">
+      <div className="flex flex-col items-center justify-center gap-8">
+        <div className="flex justify-between items-start lg:items-center w-full py-6">
+          <Link href={'/'} className="flex">
             <div className="flex">
               <img
                 src="/markify-logo.png"
@@ -112,7 +113,7 @@ export default function Home() {
           </li>
         </ol>
 
-        <div className="flex gap-8 min-w-[400px] w-full sm:w-auto items-center flex-col">
+        <div className="flex gap-8 lg:min-w-[400px] w-full sm:w-auto items-center flex-col">
           <Input
             className="h-10"
             placeholder="Enter URL (e.g., https://example.com)"
@@ -171,14 +172,15 @@ export default function Home() {
             </TooltipProvider>
           </div>
           <pre className="h-fit text-sm/6 whitespace-pre-wrap break-words reactMarkDown">
-          {/*<SyntaxHighlighter language="markdown" style={vs2015}>*/}
             <Markdown remarkPlugins={[remarkGfm]}>
-            {markdown}
+              {markdown}
             </Markdown>
           </pre>
         </section>
       )}
-
+      <div className="flex flex-col items-center justify-center gap-8 mx-auto my-12">
+        <FeaturesSection />
+      </div>
       <Footer />
     </div>
   )
