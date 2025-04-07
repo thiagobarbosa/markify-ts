@@ -3,25 +3,6 @@ import { ArrowCircleUpRight, GithubLogo, UserCircleCheck } from '@phosphor-icons
 import { ScriptCopyBtn } from '@/components/ui/script-copy-btn'
 import { Button } from '@/components/ui/button'
 
-const files = [
-  {
-    name: 'airbnb.com',
-    body: 'Airbnb is a marketplace for people to list, discover, and book accommodations around the world.',
-  },
-  {
-    name: 'nytimes.com',
-    body: 'The New York Times is an American newspaper based in New York City with worldwide influence and readership.',
-  },
-  {
-    name: 'github.com',
-    body: 'GitHub is a code hosting platform for version control and collaboration.',
-  },
-  {
-    name: 'stackoverflow.com',
-    body: 'Stack Overflow is a question and answer site for professional and enthusiast programmers.',
-  }
-]
-
 const features = [
   {
     Icon: GithubLogo,
