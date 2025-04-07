@@ -92,21 +92,21 @@ export const EditUrl = ({
         </DialogHeader>
         <div className="grid gap-4 py-4">
           <div className="grid gap-2">
-            <Label htmlFor="edit-title">Title</Label>
-            <Input
-              id="edit-title"
-              placeholder="Website Title"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-            />
-          </div>
-          <div className="grid gap-2">
             <Label htmlFor="edit-url">URL</Label>
             <Input
               id="edit-url"
               placeholder="https://example.com"
               value={url}
               onChange={(e) => setUrl(e.target.value)}
+            />
+          </div>
+          <div className="grid gap-2">
+            <Label htmlFor="edit-title">Title</Label>
+            <Input
+              id="edit-title"
+              placeholder="Website Title"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
             />
           </div>
           <div className="grid gap-2">

@@ -172,7 +172,7 @@ export default function DashboardPage() {
                               'https://www.google.com/s2/favicons?domain=example.com&sz=64'
                           }}
                         />
-                        <CardTitle className="text-lg truncate" title={webpage.title}>
+                        <CardTitle className="text-lg line-clamp-1" title={webpage.title}>
                           {webpage.title}
                         </CardTitle>
                       </div>
