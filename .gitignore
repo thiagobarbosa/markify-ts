@@ -8,6 +8,7 @@
 # production
 /dist
 /outputs
+.vercel
 
 # misc
 .DS_Store

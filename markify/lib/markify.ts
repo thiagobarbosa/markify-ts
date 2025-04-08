@@ -22,6 +22,7 @@ export const markify = async (options: MarkifyOptions): Promise<MarkifyResult> =
   // Generate Markdown from HTML
   const markdown = await generateMarkdown({
     html,
+    url: options.url,
     ignoreSelectors: options.ignoreSelectors,
     fetchOptions: options.fetchOptions
   })
