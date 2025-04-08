@@ -23,6 +23,7 @@ import {
 } from '@/components/ui/dialog'
 import { CheckIcon, ChevronRightIcon } from 'lucide-react'
 import { AnimatedButton } from '@/components/ui/animated-button'
+import { Compare } from '@/components/ui/compare'
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(false)
@@ -211,6 +212,19 @@ export default function Home() {
       )}
       <div className="flex flex-col items-center justify-center gap-8 mx-auto my-12">
         <FeaturesSection />
+        <div className="flex flex-col items-center justify-center w-fit text-center gap-4 mx-auto mt-12">
+          <span className="text-lg text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
+          Easily convert web pages into markdown code with Markify
+          </span>
+          <Compare
+            firstImage="js-example.png"
+            secondImage="markdown-example.png"
+            firstImageClassName="object-cover object-left-top"
+            secondImageClassname="object-cover object-left-top"
+            className="h-[350px] w-[350px] md:h-[500px] md:w-[500px]"
+            slideMode="hover"
+          />
+        </div>
       </div>
       <Footer />
     </div>
