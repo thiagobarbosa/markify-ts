@@ -2,9 +2,8 @@
 import { Input } from '@/components/ui/input'
 import { ChangeEvent, useState } from 'react'
 import Footer from '@/components/footer'
-import { ArrowsInLineVertical, ArrowsOutLineVertical, BookmarkSimple, Copy } from '@phosphor-icons/react'
+import { BookmarkSimple } from '@phosphor-icons/react'
 import { Button } from '@/components/ui/button'
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { Loader } from '@/components/ui/loader'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import Markdown from 'react-markdown'
@@ -13,11 +12,20 @@ import Link from 'next/link'
 import { Login } from '@/components/login'
 import { useAuth } from '@clerk/nextjs'
 import { FeaturesSection } from '@/components/features-section'
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger
+} from '@/components/ui/dialog'
+import { CheckIcon, ChevronRightIcon } from 'lucide-react'
+import { AnimatedButton } from '@/components/ui/animated-button'
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(false)
-  const [isMarkdownExpanded, setIsMarkdownExpanded] = useState(false)
   const [markdown, setMarkdown] = useState('')
   const [url, setUrl] = useState('')
   const [error, setError] = useState('')
@@ -160,38 +168,46 @@ export default function Home() {
       </div>
 
       {markdown && (
-        <Collapsible open={isMarkdownExpanded} className="w-full">
-          <CollapsibleTrigger
-            className={'flex w-full items-center justify-between gap-2 border-b-2 border-b-black/[.08] dark:border-b-white/[.145] p-4'}
-            onClick={() => setIsMarkdownExpanded(!isMarkdownExpanded)}
-          >
-            <div className="">
-              {isMarkdownExpanded ? 'Hide Markdown' : 'View Markdown'}
-            </div>
-            {isMarkdownExpanded ?
-              <ArrowsInLineVertical size={24} /> :
-              <ArrowsOutLineVertical size={24} />}
-          </CollapsibleTrigger>
-          <CollapsibleContent>
-            <section
-              className="w-full mx-auto max-h-[400px] overflow-auto px-8 my-8 bg-white dark:bg-black/[.85] p-4 border rounded-md">
-              <div
-                className="relative top-4 right-0 flex items-center justify-end gap-2 text-black/[.5] dark:text-white/[.5] cursor-pointer">
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Copy size={32} onClick={() => navigator.clipboard.writeText(markdown)} />
-                    </TooltipTrigger>
-                    <TooltipContent>Copy Markdown code</TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-              </div>
-              <Markdown remarkPlugins={[remarkGfm]}>
-                {markdown}
-              </Markdown>
-            </section>
-          </CollapsibleContent>
-        </Collapsible>
+        <Dialog>
+          <DialogTrigger asChild className="w-fit mx-auto mt-4">
+            <Button
+              variant={'outline'}
+              className="rounded-full dark:bg-primary/80 dark:text-primary-foreground/80 dark:hover:bg-primary dark:hover:text-primary-foreground"
+            >
+              View Markdown</Button>
+          </DialogTrigger>
+          <DialogContent className="h-[calc(100vh-6rem)] overflow-y-scroll">
+            <DialogHeader>
+              <DialogTitle>Markdown</DialogTitle>
+              <DialogDescription className={'border-b border-b-muted-foreground pb-4'}>
+                <span>{url}</span>
+
+                <AnimatedButton
+                  className="h-6 w-fit py-2 px-0 my-2 rounded-md text-primary bg-transparent hover:underline"
+                  onClick={() => {
+                    navigator.clipboard.writeText(markdown)
+                  }}>
+                <span className="group inline-flex items-center">
+                  Copy source
+                  <ChevronRightIcon
+                    className="ml-1 size-4 transition-transform duration-300 group-hover:translate-x-1" />
+                </span>
+                  <span className="group inline-flex items-center">
+                  <CheckIcon className="mr-2 size-4" />
+                  Copied!
+                </span>
+                </AnimatedButton>
+
+              </DialogDescription>
+            </DialogHeader>
+            <Markdown remarkPlugins={[remarkGfm]}>
+              {markdown}
+            </Markdown>
+            <DialogFooter>
+              <Button type="submit">Save changes</Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       )}
       <div className="flex flex-col items-center justify-center gap-8 mx-auto my-12">
         <FeaturesSection />
