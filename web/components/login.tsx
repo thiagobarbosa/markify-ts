@@ -1,20 +1,22 @@
+'use client'
+
 import { Button } from '@/components/ui/button'
-import { SignInButton, useAuth, UserButton } from '@clerk/nextjs'
+import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/nextjs'
 import { dark } from '@clerk/themes'
 
 export const Login = () => {
-  const { isSignedIn } = useAuth()
   return (
     <div className="flex items-center gap-4">
-      {isSignedIn ? (
+      <SignedIn>
         <div className="flex items-center gap-2 rounded-md">
           <UserButton showName userProfileMode={'modal'} appearance={{ baseTheme: dark }} />
         </div>
-      ) : (
-        <SignInButton mode="modal" appearance={{ baseTheme: dark }}>
+      </SignedIn>
+      <SignedOut>
+        <SignInButton appearance={{ baseTheme: dark }}>
           <Button variant="outline" className={'cursor-pointer'}>Sign In</Button>
         </SignInButton>
-      )}
+      </SignedOut>
     </div>
   )
 }
