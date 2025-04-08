@@ -2,7 +2,7 @@
 import { Input } from '@/components/ui/input'
 import { ChangeEvent, useState } from 'react'
 import Footer from '@/components/footer'
-import { BookmarkSimple, Copy } from '@phosphor-icons/react'
+import { ArrowsInLineVertical, ArrowsOutLineVertical, BookmarkSimple, Copy } from '@phosphor-icons/react'
 import { Button } from '@/components/ui/button'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { Loader } from '@/components/ui/loader'
@@ -13,9 +13,11 @@ import Link from 'next/link'
 import { Login } from '@/components/login'
 import { useAuth } from '@clerk/nextjs'
 import { FeaturesSection } from '@/components/features-section'
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(false)
+  const [isMarkdownExpanded, setIsMarkdownExpanded] = useState(false)
   const [markdown, setMarkdown] = useState('')
   const [url, setUrl] = useState('')
   const [error, setError] = useState('')
@@ -113,7 +115,7 @@ export default function Home() {
           </li>
         </ol>
 
-        <div className="flex gap-8 lg:min-w-[400px] w-full sm:w-auto items-center flex-col">
+        <div className="flex gap-4 lg:min-w-[400px] w-full sm:w-auto items-center flex-col">
           <Input
             className="h-10"
             placeholder="Enter URL (e.g., https://example.com)"
@@ -129,7 +131,7 @@ export default function Home() {
             aria-invalid={error ? 'true' : 'false'}
           />
 
-          <div className="flex items-center flex-col gap-2">
+          <div className="flex items-center flex-col">
             <Button
               variant={'outline'}
               className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 px-4 sm:px-5 sm:w-auto w-fit cursor-pointer"
@@ -142,7 +144,7 @@ export default function Home() {
             </Button>
             <Button
               variant="link"
-              className="flex items-center justify-center font-medium text-base sm:w-auto cursor-pointer"
+              className="flex items-center justify-center font-medium text-base sm:w-auto cursor-pointer py-0"
               disabled={!markdown && !error && !url}
               onClick={handleClear}
             >
@@ -158,25 +160,38 @@ export default function Home() {
       </div>
 
       {markdown && (
-        <section
-          className="w-full max-w-[900px] mx-auto max-h-[400px] overflow-auto px-8 my-8 bg-white dark:bg-black/[.85] rounded-lg shadow-lg">
-          <div
-            className="relative top-4 right-0 flex items-center justify-end gap-2 text-black/[.5] dark:text-white/[.5] cursor-pointer">
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Copy size={32} onClick={() => navigator.clipboard.writeText(markdown)} />
-                </TooltipTrigger>
-                <TooltipContent>Copy Markdown code</TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          </div>
-          <pre className="h-fit text-sm/6 whitespace-pre-wrap break-words reactMarkDown">
-            <Markdown remarkPlugins={[remarkGfm]}>
-              {markdown}
-            </Markdown>
-          </pre>
-        </section>
+        <Collapsible open={isMarkdownExpanded} className="w-full">
+          <CollapsibleTrigger
+            className={'flex w-full items-center justify-between gap-2 border-b-2 border-b-black/[.08] dark:border-b-white/[.145] p-4'}
+            onClick={() => setIsMarkdownExpanded(!isMarkdownExpanded)}
+          >
+            <div className="">
+              {isMarkdownExpanded ? 'Hide Markdown' : 'View Markdown'}
+            </div>
+            {isMarkdownExpanded ?
+              <ArrowsInLineVertical size={24} /> :
+              <ArrowsOutLineVertical size={24} />}
+          </CollapsibleTrigger>
+          <CollapsibleContent>
+            <section
+              className="w-full mx-auto max-h-[400px] overflow-auto px-8 my-8 bg-white dark:bg-black/[.85] p-4 border rounded-md">
+              <div
+                className="relative top-4 right-0 flex items-center justify-end gap-2 text-black/[.5] dark:text-white/[.5] cursor-pointer">
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Copy size={32} onClick={() => navigator.clipboard.writeText(markdown)} />
+                    </TooltipTrigger>
+                    <TooltipContent>Copy Markdown code</TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </div>
+              <Markdown remarkPlugins={[remarkGfm]}>
+                {markdown}
+              </Markdown>
+            </section>
+          </CollapsibleContent>
+        </Collapsible>
       )}
       <div className="flex flex-col items-center justify-center gap-8 mx-auto my-12">
         <FeaturesSection />
