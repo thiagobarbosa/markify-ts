@@ -108,8 +108,8 @@ export default function DashboardPage() {
           </div>
         </Link>
 
-        <div className="flex items-center w-full md:w-auto gap-2">
-          <div className="relative w-40 sm:w-64">
+        <div className="flex items-center w-full md:w-auto gap-2 sm:gap-4">
+          <div className="relative max-w-40 sm:max-w-64">
             <MagnifyingGlass className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input
               type="search"

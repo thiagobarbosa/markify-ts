@@ -85,7 +85,7 @@ export default function Home() {
   return (
     <div className="container min-h-screen max-w-5xl flex flex-col mx-auto pt-8 px-6">
       <div className="flex flex-col items-center justify-center gap-8">
-        <div className="flex justify-between items-start sm:items-center w-full py-6 gap-2">
+        <div className="flex justify-between items-start sm:items-center w-full py-6 gap-2 sm:gap-4">
           <Link href={'/'} className="flex">
             <div className="flex">
               <img
