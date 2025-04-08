@@ -143,11 +143,11 @@ export const AddUrl = ({
             </Select>
           </div>
         </div>
-        <DialogFooter>
+        <DialogFooter className="flex items-center justify-end gap-2 pt-4">
           <Button variant="link" onClick={() => setIsDialogOpen(false)}>
             Cancel
           </Button>
-          <Button onClick={addWebpage} disabled={isLoading} className={'w-36'}>
+          <Button onClick={addWebpage} disabled={isLoading || !url || !title} className={'w-36'}>
             {!isLoading && <span>Save page</span>}
             {isLoading && <span>Saving...</span>}
           </Button>

@@ -14,6 +14,14 @@ import { Webpage } from '@/types/webpage'
 import Link from 'next/link'
 import { Login } from '@/components/login'
 import Footer from '@/components/footer'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle
+} from '@/components/ui/dialog'
 
 const categories = {
   general: 'General',
@@ -37,6 +45,8 @@ export default function DashboardPage() {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
   const [activeTab, setActiveTab] = useState('all')
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
+  const [webpageToDelete, setWebpageToDelete] = useState<string | null>(null)
 
   // load webpages from localStorage on initial render
   useEffect(() => {
@@ -64,10 +74,21 @@ export default function DashboardPage() {
     return matchesSearch && matchesCategory
   })
 
-  const deleteWebpage = (id: string) => {
-    const updatedPages = webpages.filter((page) => page.id !== id)
+  const confirmDelete = (id: string) => {
+    setWebpageToDelete(id)
+    setIsDeleteDialogOpen(true)
+  }
+
+  const deleteWebpage = () => {
+    if (!webpageToDelete) return
+
+    const updatedPages = webpages.filter((page) => page.id !== webpageToDelete)
     setWebpages(updatedPages)
     localStorage.setItem('webpages', JSON.stringify(updatedPages))
+
+    setIsDeleteDialogOpen(false)
+    setWebpageToDelete(null)
+
     toast.success('Page deleted', {
       description: 'Your page has been removed',
     })
@@ -136,6 +157,32 @@ export default function DashboardPage() {
         />
       )}
 
+      {/* Delete Confirmation Dialog */}
+      <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Confirm Deletion</DialogTitle>
+            <DialogDescription className="text-left">
+              Are you sure you want to delete this page? This action cannot be undone.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="flex flex-row items-center justify-end gap-2 pt-4">
+            <Button
+              variant="outline"
+              onClick={() => {
+                setIsDeleteDialogOpen(false)
+                setWebpageToDelete(null)
+              }}
+            >
+              Cancel
+            </Button>
+            <Button variant="destructive" onClick={deleteWebpage}>
+              Delete
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
       {/* Category Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="my-8">
         <TabsList className="mb-4 flex flex-wrap">
@@ -194,7 +241,7 @@ export default function DashboardPage() {
                         <NotePencil className="h-4 w-4" />
                         <span className="sr-only">Edit</span>
                       </Button>
-                      <Button variant="outline" size="icon" onClick={() => deleteWebpage(webpage.id)}>
+                      <Button variant="outline" size="icon" onClick={() => confirmDelete(webpage.id)}>
                         <Trash className="h-4 w-4" />
                         <span className="sr-only">Delete</span>
                       </Button>
