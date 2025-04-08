@@ -83,9 +83,9 @@ export default function Home() {
   }
 
   return (
-    <div className="container min-h-screen max-w-5xl flex flex-col mx-auto px-6 pt-8">
+    <div className="container min-h-screen max-w-5xl flex flex-col mx-auto pt-8 px-6">
       <div className="flex flex-col items-center justify-center gap-8">
-        <div className="flex justify-between items-start lg:items-center w-full py-6">
+        <div className="flex justify-between items-start sm:items-center w-full py-6 gap-2">
           <Link href={'/'} className="flex">
             <div className="flex">
               <img
@@ -93,16 +93,16 @@ export default function Home() {
                 alt="Markify logo"
                 className="h-10 w-auto mr-2"
               />
-              <div className="flex flex-col">
-                <h1 className="text-3xl font-bold font-mono">Markify</h1>
-                <p className="text-base text-muted-foreground">
+              <div className="flex flex-col justify-center">
+                <h1 className="text-xl sm:text-3xl font-bold font-mono">Markify</h1>
+                <p className="hidden sm:block text-base text-muted-foreground">
                   transform web pages into markdown code
                 </p>
               </div>
             </div>
           </Link>
           {isSignedIn && (
-            <Button asChild className="gap-2 ml-auto mr-4">
+            <Button asChild className="gap-2 ml-auto">
               <Link href="/dashboard">
                 <BookmarkSimple className="h-4 w-4" />
                 Dashboard

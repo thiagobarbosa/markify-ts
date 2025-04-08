@@ -88,26 +88,28 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="container min-h-screen flex flex-col mx-auto pt-8">
-      <div className="flex justify-between items-center w-full py-6">
-        <Link href={'/'} className="hidden md:flex">
-          <div className="flex">
-            <img
-              src="/markify-logo.png"
-              alt="Markify logo"
-              className="h-10 w-auto mr-2"
-            />
-            <div className="flex flex-col">
-              <h1 className="text-3xl font-bold font-mono">Markify</h1>
-              <p className="text-base text-muted-foreground">
-                transform web pages into markdown code
-              </p>
+    <div className="container min-h-screen max-w-7xl flex flex-col mx-auto pt-8 px-6">
+      <div className="flex justify-between items-start sm:items-center w-full py-6 gap-2">
+        <Link href={'/'} className="flex">
+          <div className="">
+            <div className="flex">
+              <img
+                src="/markify-logo.png"
+                alt="Markify logo"
+                className="h-10 w-auto mr-2"
+              />
+              <div className="flex flex-col">
+                <h1 className="hidden sm:block text-3xl font-bold font-mono">Markify</h1>
+                <p className="hidden sm:block text-base text-muted-foreground">
+                  transform web pages into markdown code
+                </p>
+              </div>
             </div>
           </div>
         </Link>
 
-        <div className="flex items-center w-full md:w-auto space-x-2">
-          <div className="relative w-full md:w-64">
+        <div className="flex items-center w-full md:w-auto gap-2">
+          <div className="relative w-40 sm:w-64">
             <MagnifyingGlass className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input
               type="search"
