@@ -13,7 +13,7 @@ and HTML snippets into well-structured Markdown content.
 ## Installation
 
 ```bash
-npm install markify
+npm install markify-ts
 ```
 
 ## Usage

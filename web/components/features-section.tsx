@@ -18,7 +18,7 @@ const features = [
           codeLanguage="shell"
           lightTheme="nord"
           darkTheme="vitesse-dark"
-          commandMap={{ npm: 'npm install markify' }}
+          commandMap={{ npm: 'npm install markify-ts' }}
         />
         <Button
           variant="link"
