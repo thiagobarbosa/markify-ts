@@ -26,17 +26,17 @@ export const cleanSpaces = (markdown: string): string => {
 
 export const preProcessingRemovals = (
   $: cheerio.Root,
-  selectorsToIgnore?: string[]
+  selectorsToIgnore?: string[],
+  ignoreHiddenElements?: boolean
 ) => {
-  // remove globally unwanted elements
-  $('script, noscript, style').remove()
-
   // remove invisible elements
-  $('*').each((_, el) => {
-    if (!isVisible($(el))) {
-      $(el).remove()
-    }
-  })
+  if (ignoreHiddenElements) {
+    $('*').each((_, el) => {
+      if (!isVisible($(el))) {
+        $(el).remove()
+      }
+    })
+  }
 
   // remove elements based on selectors
   if (selectorsToIgnore?.length) {

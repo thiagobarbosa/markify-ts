@@ -13,11 +13,12 @@ import assert from 'node:assert'
  * @returns The markdown content generated from the HTML
  * @throws Error if no HTML content is provided
  */
-export const generateMarkdown = async ({ html, url, fetchOptions, ignoreSelectors }:
+export const generateMarkdown = async ({ html, url, ignoreSelectors, ignoreHiddenElements, fetchOptions }:
   {
     html?: string | null,
     url?: string | null,
     ignoreSelectors?: string[],
+    ignoreHiddenElements?: boolean,
     fetchOptions?: RequestInit
   }
 ): Promise<string> => {
@@ -27,7 +28,7 @@ export const generateMarkdown = async ({ html, url, fetchOptions, ignoreSelector
   }
 
   let $ = cheerio.load(html)
-  $ = preProcessingRemovals($, ignoreSelectors)
+  $ = preProcessingRemovals($, ignoreSelectors, ignoreHiddenElements)
 
   const promise = processElement($, $('body')[0], 'default', url)
   return await promise.then((markdown) => cleanSpaces(markdown))
