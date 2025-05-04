@@ -24,6 +24,7 @@ export const markify = async (options: MarkifyOptions): Promise<MarkifyResult> =
     html,
     url: options.url,
     ignoreSelectors: options.ignoreSelectors,
+    ignoreHiddenElements: options.ignoreHiddenElements,
     fetchOptions: options.fetchOptions
   })
 

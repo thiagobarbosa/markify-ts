@@ -10,4 +10,6 @@ export interface MarkifyOptions {
   fetchOptions?: RequestInit;
   /** Selectors to ignore when processing the HTML */
   ignoreSelectors?: string[];
+  /** Ignore hidden elements (e.g., display: none) */
+  ignoreHiddenElements?: boolean;
 }
