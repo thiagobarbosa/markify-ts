@@ -1,6 +1,6 @@
 {
   "name": "markify-ts",
-  "version": "0.0.12",
+  "version": "0.0.14",
   "description": "Convert web pages and HTML snippets into Markdown content",
   "type": "module",
   "main": "dist/index.js",
@@ -17,16 +17,18 @@
   "scripts": {
     "markify": "tsx run.ts",
     "build": "tsup index.ts --minify --dts --format esm --out-dir dist",
-    "prepare-publish": "cp ../README.md ./README.md",
+    "release:prepare": "cp ../README.md ./README.md",
+    "release": "npm run build && npm run release:prepare && npm publish && npm run cleanup",
     "cleanup": "rm -f ./README.md",
-    "publish-package": "npm run build && npm run prepare-publish && npm publish && npm run cleanup",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   },
   "keywords": [
     "html",
     "markdown",
-    "cheerio"
+    "converter",
+    "html-to-markdown",
+    "html-to-markdown-converter"
   ],
   "author": "Thiago Barbosa",
   "license": "MIT",
