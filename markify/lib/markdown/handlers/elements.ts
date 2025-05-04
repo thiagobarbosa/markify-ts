@@ -71,7 +71,7 @@ export const processElement = async (
     }
 
     case 'a':
-      return await handleLinks($, element, context, url || '') || ''
+      return await handleLinks($, element, context, url || '') + '\n'
 
     case 'img': {
       return handleImages($, element, url) || ''
