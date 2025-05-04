@@ -1,5 +1,6 @@
-import * as cheerio from 'cheerio'
+import cheerio from 'cheerio'
 import { handleLinks } from '@/lib/markdown/handlers/links'
+import { handleImages } from '@/lib/markdown/handlers/images'
 import { processTable } from '@/lib/markdown/handlers/tables'
 import { processList } from '@/lib/markdown/handlers/lists'
 
@@ -15,8 +16,8 @@ export const processElement = async (
     const text = $node.text().trim()
     if (!text.length || text.length < 2) return ''
     // if text already ends with a punctuation mark, don't add another one
-    if (text.match(/[.!?]$/)) return text
-    return text + '.'
+    if (text.match(/[.!?]$/)) return '\n' + text
+    return '\n' + text + '.'
   }
 
   if (element.type !== 'tag') {
@@ -28,10 +29,8 @@ export const processElement = async (
   switch (tagName) {
     case 'label':
       return context === 'table'
-        ? '<b>' +
-        (await processChildren($, $node, context, url)) +
-        '</b>'
-        : '**' + (await processChildren($, $node, context, url)) + '**'
+        ? '<br><b>' + $node.text().trim() + '</b><br>'
+        : '\n**' + $node.text().trim() + '**\n'
 
     case 'h1':
     case 'h2':
@@ -45,48 +44,37 @@ export const processElement = async (
 
       // check if heading has a child url
       const headingLink = $node.find('a').first()
-      if (headingLink.length) {
-        const linkHref = headingLink.attr('href') || ''
+      if (headingLink.length && headingLink.attr('href')) {
+        const linkHref = headingLink.attr('href')
         return (
-          '\n\n' +
+          '\n' +
           '#'.repeat(level) +
           ' [' +
           headingText +
           '](' +
           linkHref +
-          ')\n'
+          ')'
         )
       }
 
-      return '\n\n' + '#'.repeat(level) + ' ' + headingText + '\n'
+      return '\n' + '#'.repeat(level) + ' ' + headingText
     }
 
     case 'p': {
       const paragraphText = $node.text().trim()
-      if (paragraphText.length) {
+      if (paragraphText.length > 2) {
         return context === 'table'
-          ? `<br>${paragraphText}<br>`
-          : `\n${paragraphText}\n`
+          ? `<br>${paragraphText}`
+          : `\n${paragraphText}`
       }
       return ''
     }
 
     case 'a':
-      return handleLinks($, element, url || '')
+      return await handleLinks($, element, context, url || '') || ''
 
     case 'img': {
-      let src = $node.attr('src')?.trim()
-      if (!src?.length || src.endsWith('.svg')) return ''
-      if (src.startsWith('data:image')) return ''
-
-      if (src.startsWith('//')) {
-        src = 'https:' + src
-      }
-
-      const alt =
-        $node.attr('alt')?.trim() || $node.attr('title')?.trim() || 'Image'
-
-      return `\n![${alt}](${src})`
+      return handleImages($, element, url) || ''
     }
 
     case 'table':
@@ -97,24 +85,22 @@ export const processElement = async (
 
     case 'strong':
     case 'b': {
-      const strongText = (
-        await processChildren($, $node, context, url)
-      ).trim()
+      const strongText = $node.text().trim()
       if (strongText.length) {
         return context === 'table'
           ? `<b>${strongText}</b>`
-          : `**${strongText}** `
+          : `**${strongText}**`
       }
       return ''
     }
 
     case 'em':
     case 'i': {
-      const emText = await processChildren($, $node, context, url)
-      if (emText.trim().length) {
+      const emText = $node.text().trim()
+      if (emText.length) {
         return context === 'table'
-          ? `<i>${emText.trim()}</i>`
-          : `*${emText.trim()}* `
+          ? `<i>${emText}</i>`
+          : `*${emText}*`
       }
       return ''
     }
@@ -125,7 +111,7 @@ export const processElement = async (
     case 'pre': {
       const code = $node.find('code')
       if (code.length) {
-        const language = code.attr('class')?.split('-')[1] || ''
+        const language = code.attr('class')?.split('-')[1]?.trim() || ''
         return '```' + language + '\n' + code.text().trim() + '\n```\n\n'
       }
       return '```\n' + $node.text().trim() + '\n```\n\n'
@@ -145,10 +131,10 @@ export const processElement = async (
       return context === 'table' ? '<br>' : '\n'
 
     case 'hr':
-      return context === 'table' ? '<br>' : '\n---\n'
+      return context === 'table' ? '<br>---<br>' : '\n---\n'
 
     default:
-      return '\n' + (await processChildren($, $node, context, url))
+      return (await processChildren($, $node, context, url))
   }
 }
 
