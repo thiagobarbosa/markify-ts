@@ -20,8 +20,8 @@
     "prepare-publish": "cp ../README.md ./README.md",
     "cleanup": "rm -f ./README.md",
     "publish-package": "npm run build && npm run prepare-publish && npm publish && npm run cleanup",
-    "lint": "eslint ..",
-    "lint:fix": "eslint .. --fix"
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
   },
   "keywords": [
     "html",
@@ -46,10 +46,7 @@
     "@typescript-eslint/eslint-plugin": "^8.28.0",
     "@typescript-eslint/parser": "^8.28.0",
     "eslint": "^9.23.0",
-    "tsup": "^8.0.0",
+    "tsup": "^8.0.2",
     "typescript": "^5"
-  },
-  "peerDependencies": {
-    "cheerio": "^1.0.0"
   }
 }
