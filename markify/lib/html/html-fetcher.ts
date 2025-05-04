@@ -6,7 +6,7 @@ export const getHTML = async (url: string, fetchOptions?: RequestInit)
   const response = await fetch(url, fetchOptions)
 
   if (!response.ok) {
-    throw new Error('Failed to fetch HTML. Status: ' + response.status)
+    throw new Error('Error status: ' + response.status + '. Message: ' + response.statusText)
   }
   return await response.text()
 }
