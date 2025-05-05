@@ -33,7 +33,7 @@ export const preProcessingRemovals = (
   if (ignoreHiddenElements) {
     $('*').each((_, el) => {
       const $node = $(el) as cheerio.Cheerio
-      if ((el.type === 'tag' && el.tagName === 'a' && $node.text() === 'Skip to main content') || !isVisible($node)) {
+      if (($node.text() === 'Skip to main content') || !isVisible($node)) {
         $node.remove()
       }
     })

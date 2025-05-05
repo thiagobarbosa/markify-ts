@@ -11,11 +11,13 @@ export const handleImages = (
   element: cheerio.Element,
   url?: string | null
 ): string | null => {
-  const src = getImageSource($, element, url)
+  const imgSrc = getImageSource($, element, url)
 
-  const alt = $(element).attr('alt')?.trim() || $(element).attr('title')?.trim() || 'Image'
+  if (!imgSrc) return null
 
-  return `\n![${alt}](${src})`
+  const imgAlt = $(element).attr('alt')?.trim() || $(element).attr('title')?.trim() || 'Image'
+
+  return `\n![${imgAlt}](${imgSrc})`
 }
 
 /**
