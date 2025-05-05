@@ -29,11 +29,12 @@ export const preProcessingRemovals = (
   selectorsToIgnore?: string[],
   ignoreHiddenElements?: boolean
 ) => {
-  // remove invisible elements
+  // remove invisible elements and 'Skip to main content' accessibility link
   if (ignoreHiddenElements) {
     $('*').each((_, el) => {
-      if (!isVisible($(el))) {
-        $(el).remove()
+      const $node = $(el) as cheerio.Cheerio
+      if ((el.type === 'tag' && el.tagName === 'a' && $node.text() === 'Skip to main content') || !isVisible($node)) {
+        $node.remove()
       }
     })
   }
@@ -50,7 +51,11 @@ export const preProcessingRemovals = (
   return $
 }
 
-const isVisible = (el: any): boolean => {
-  const style = el.css(['display', 'visibility'])
-  return style?.display !== 'none' && style?.visibility !== 'hidden'
+const isVisible = (el: cheerio.Cheerio): boolean => {
+  const style = el.attr('style')
+  const ariaHidden = el.attr('aria-hidden')
+  if (!style && !ariaHidden) {
+    return true
+  }
+  return !style || (!style?.includes('display: none') && !style?.includes('visibility: hidden') && ariaHidden !== 'true')
 }
