@@ -41,9 +41,10 @@ export const handleLinks = async (
 
   // Otherwise, process the element as a regular link
   const title = $node.attr('title')?.trim()
-  const linkText = title || $node.text().trim()
+  const ariaLabel = $node.attr('aria-label')?.trim()
+  const linkText = title || ariaLabel || $node.text().trim()
 
-  return `${linkText.length ? `[${linkText}](${href})` : href}`
+  return linkText.length ? `\n[${linkText}](${href})` : '\n' + href
 }
 
 
@@ -71,9 +72,10 @@ export const handleLinkImages = async (
 
   const imgSrc = getImageSource($, $img[0], url)
 
-  const imgAlt = $img.attr('alt')
-  const title = $img.attr('title')
-  const linkText = title || imgAlt || 'Image'
+  const imgAlt = $img.attr('alt')?.trim()
+  const title = $img.attr('title')?.trim()
+  const ariaLabel = $img.attr('aria-label')?.trim()
+  const linkText = title || imgAlt || ariaLabel || 'Image'
 
   // Remove the image from a clone to process other content
   const $nodeClone = $node.clone()
@@ -81,11 +83,13 @@ export const handleLinkImages = async (
 
   // Process remaining content
   const remainingContent = await processChildren($, $nodeClone, context, url)
+  // Replace any double '\n' with a single '\n'
+  const cleanedRemainingContent = remainingContent.replace(/\n{2,}/g, '\n')
 
   // Combine image and other content
-  if (remainingContent.trim().length > 2) {
+  if (cleanedRemainingContent.trim().length > 2) {
     // Return both image and other content as a link
-    return `\n\n![${linkText}](${imgSrc})${remainingContent}\n${href}`
+    return `\n\n![${linkText}](${imgSrc})${cleanedRemainingContent}\n${href}`
   } else {
     // Only image, return linked image
     return `\n\n![${linkText}](${imgSrc})\n${href}`
