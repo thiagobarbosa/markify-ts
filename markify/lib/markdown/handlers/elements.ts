@@ -4,6 +4,8 @@ import { handleImages } from '@/lib/markdown/handlers/images'
 import { processTable } from '@/lib/markdown/handlers/tables'
 import { processList } from '@/lib/markdown/handlers/lists'
 
+export const MIN_TEXT_LENGTH = 2
+
 export const processElement = async (
   $: cheerio.Root,
   element: cheerio.Element,
@@ -14,7 +16,6 @@ export const processElement = async (
 
   if (element.type === 'text') {
     const text = $node.text().trim()
-    if (text.length < 2) return ''
     // if text already ends with a punctuation mark, don't add another one
     if (text.match(/[.!?]$/)) return '\n' + text
     return '\n' + text + '.'
@@ -59,12 +60,9 @@ export const processElement = async (
 
     case 'p': {
       const paragraphText = $node.text().trim()
-      if (paragraphText.length > 2) {
-        return context === 'table'
-          ? `<br>${paragraphText}`
-          : `\n${paragraphText}`
-      }
-      return ''
+      return context === 'table'
+        ? `<br>${paragraphText}`
+        : `\n${paragraphText}`
     }
 
     case 'a':
@@ -140,7 +138,7 @@ export const processChildren = async (
 
   for (const child of $node.contents().toArray()) {
     const processedText = await processElement($, child, context, url)
-    if (processedText.trim().length > 2) {
+    if (processedText.trim().length > MIN_TEXT_LENGTH) {
       results.push(processedText)
     }
   }

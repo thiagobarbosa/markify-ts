@@ -1,5 +1,5 @@
 import cheerio from 'cheerio'
-import { processChildren } from '@/lib/markdown/handlers/elements'
+import { MIN_TEXT_LENGTH, processChildren } from '@/lib/markdown/handlers/elements'
 import { getImageSource } from '@/lib/markdown/handlers/images'
 
 /**
@@ -87,11 +87,7 @@ export const handleLinkImages = async (
   const cleanedRemainingContent = remainingContent.replace(/\n{2,}/g, '\n')
 
   // Combine image and other content
-  if (cleanedRemainingContent.trim().length > 2) {
-    // Return both image and other content as a link
-    return `\n\n![${linkText}](${imgSrc})${cleanedRemainingContent}\n${href}\n---\n`
-  } else {
-    // Only image, return linked image
-    return `\n\n![${linkText}](${imgSrc})\n${href}\n---\n`
-  }
+  return '\n\n![' + linkText + '](' + imgSrc + ')' +
+    (cleanedRemainingContent.trim().length > MIN_TEXT_LENGTH ? cleanedRemainingContent : '') +
+    '\n' + href + '\n---\n'
 }
