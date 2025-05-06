@@ -89,9 +89,9 @@ export const handleLinkImages = async (
   // Combine image and other content
   if (cleanedRemainingContent.trim().length > 2) {
     // Return both image and other content as a link
-    return `\n\n![${linkText}](${imgSrc})${cleanedRemainingContent}\n${href}`
+    return `\n\n![${linkText}](${imgSrc})${cleanedRemainingContent}\n${href}\n---\n`
   } else {
     // Only image, return linked image
-    return `\n\n![${linkText}](${imgSrc})\n${href}`
+    return `\n\n![${linkText}](${imgSrc})\n${href}\n---\n`
   }
 }
