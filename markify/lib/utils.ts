@@ -1,4 +1,5 @@
 import cheerio from 'cheerio'
+import { MIN_TEXT_LENGTH } from '@/lib/markdown/handlers/elements'
 
 /**
  * Trims excessive breaks from a markdown string.
@@ -58,4 +59,30 @@ const isVisible = (el: cheerio.Cheerio): boolean => {
     return true
   }
   return !style || (!style?.includes('display: none') && !style?.includes('visibility: hidden') && ariaHidden !== 'true')
+}
+
+
+/**
+ * Get all the text content from a node and its children
+ * @param $ Cheerio root object
+ * @param element Cheerio element node
+ * @returns Array of text strings
+ */
+export const getTextsFromNode = ($: cheerio.Root, element: cheerio.Element): string[] => {
+  const texts: string[] = []
+
+  // If the node is a text node, return its text
+  if (element.type === 'text' && element.data && element.data.length > MIN_TEXT_LENGTH) {
+    texts.push(element.data)
+    return texts
+  }
+
+  // If the node is an element, iterate through its children
+  if (element.type === 'tag') {
+    $(element).contents().each((_, child) => {
+      texts.push(...getTextsFromNode($, child))
+    })
+  }
+
+  return texts
 }
