@@ -1,8 +1,11 @@
+import * as process from 'node:process'
+import * as path from 'node:path'
+import { dirname } from 'node:path'
+import { Buffer } from 'node:buffer'
 import { defineConfig } from 'tsup'
 import { resolve } from 'path'
 import swc, { JscConfig } from '@swc/core'
 import type { JscTarget } from '@swc/types'
-import * as path from 'node:path'
 
 import tsConfig from './tsconfig.json'
 
@@ -41,7 +44,7 @@ export default defineConfig({
                   legacyDecorator: true,
                   decoratorMetadata: true,
                 },
-                baseUrl: path.resolve(__dirname, tsConfig.compilerOptions.baseUrl || '.'),  // this was missing
+                baseUrl: path.resolve(dirname.toString(), tsConfig.compilerOptions.baseUrl || '.'),  // this was missing
                 paths: tsConfig.compilerOptions.paths,  // this was missing
                 keepClassNames: true,
                 target: (tsConfig.compilerOptions.target || 'es2022').toLowerCase() as JscTarget,

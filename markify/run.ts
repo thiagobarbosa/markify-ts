@@ -1,6 +1,7 @@
+import * as process from 'node:process'
 import { mkdir, writeFile } from 'fs/promises'
 import { generateMarkdown } from '@/lib/markdown/markdown-generator'
-import { dirname } from 'path'
+import { dirname } from 'node:path'
 
 const main = async () => {
   const args = process.argv.slice(2)

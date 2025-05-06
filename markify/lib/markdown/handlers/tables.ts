@@ -1,3 +1,4 @@
+import cheerio from 'cheerio'
 import { processChildren } from '@/lib/markdown/handlers/elements'
 
 /**
