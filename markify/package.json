@@ -1,6 +1,6 @@
 {
   "name": "markify-ts",
-  "version": "0.0.14",
+  "version": "0.0.15",
   "description": "Convert web pages and HTML snippets into Markdown content",
   "type": "module",
   "main": "dist/index.js",
@@ -18,7 +18,7 @@
     "markify": "tsx run.ts",
     "build": "tsup index.ts --minify --dts --format esm --out-dir dist",
     "release:prepare": "cp ../README.md ./README.md",
-    "release": "npm run build && npm run release:prepare && npm publish && npm run cleanup",
+    "release": "npm i && npm run build && npm run release:prepare && npm publish && npm run cleanup",
     "cleanup": "rm -f ./README.md",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
