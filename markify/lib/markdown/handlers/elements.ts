@@ -10,11 +10,11 @@ export const processElement = async (
   context: 'default' | 'table' = 'default',
   url?: string | null
 ): Promise<string> => {
-  const $node = $(element) as cheerio.Cheerio
+  const $node = $(element)
 
   if (element.type === 'text') {
     const text = $node.text().trim()
-    if (!text.length || text.length < 2) return ''
+    if (text.length < 2) return ''
     // if text already ends with a punctuation mark, don't add another one
     if (text.match(/[.!?]$/)) return '\n' + text
     return '\n' + text + '.'
@@ -39,6 +39,9 @@ export const processElement = async (
     case 'h5':
     case 'h6': {
       const level = parseInt(tagName.charAt(1))
+      // For headings 1 and 2, add 2 line breaks before the heading; for 3 and below, add just 1
+      const numberOfLineBreaks = level > 2 ? 1 : 2
+
       const headingText = $node.text().trim()
       if (!headingText.length) return ''
 
@@ -47,17 +50,11 @@ export const processElement = async (
       if (headingLink.length && headingLink.attr('href')) {
         const linkHref = headingLink.attr('href')
         return (
-          '\n' +
-          '#'.repeat(level) +
-          ' [' +
-          headingText +
-          '](' +
-          linkHref +
-          ')'
+          '\n'.repeat(numberOfLineBreaks) + '#'.repeat(level) + '[' + headingText + '](' + linkHref + ')'
         )
       }
 
-      return '\n' + '#'.repeat(level) + ' ' + headingText
+      return '\n'.repeat(numberOfLineBreaks) + '#'.repeat(level) + ' ' + headingText
     }
 
     case 'p': {
@@ -71,7 +68,7 @@ export const processElement = async (
     }
 
     case 'a':
-      return await handleLinks($, element, context, url || '') + '\n'
+      return await handleLinks($, element, context, url || '') || ''
 
     case 'img': {
       return handleImages($, element, url) || ''
@@ -86,23 +83,17 @@ export const processElement = async (
     case 'strong':
     case 'b': {
       const strongText = $node.text().trim()
-      if (strongText.length) {
-        return context === 'table'
-          ? `<b>${strongText}</b>`
-          : `**${strongText}**`
-      }
-      return ''
+      return context === 'table'
+        ? `<b>${strongText}</b>`
+        : `**${strongText}**`
     }
 
     case 'em':
     case 'i': {
       const emText = $node.text().trim()
-      if (emText.length) {
-        return context === 'table'
-          ? `<i>${emText}</i>`
-          : `*${emText}*`
-      }
-      return ''
+      return context === 'table'
+        ? `<i>${emText}</i>`
+        : `*${emText}*`
     }
 
     case 'code':
@@ -131,10 +122,10 @@ export const processElement = async (
       return context === 'table' ? '<br>' : '\n'
 
     case 'hr':
-      return context === 'table' ? '<br>---<br>' : '\n---\n'
+      return context === 'table' ? '<br><br>---<br>' : '\n\n---\n'
 
     default:
-      return (await processChildren($, $node, context, url))
+      return await processChildren($, $node, context, url)
   }
 }
 
@@ -149,10 +140,10 @@ export const processChildren = async (
 
   for (const child of $node.contents().toArray()) {
     const processedText = await processElement($, child, context, url)
-    if (processedText.trim()) {
+    if (processedText.trim().length > 2) {
       results.push(processedText)
     }
   }
 
-  return results.join(' ')
+  return results.join('')
 }
