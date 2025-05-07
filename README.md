@@ -68,6 +68,14 @@ Ignore all elements with id equals to 'banner'
 
 </details>
 
+### List of available parameters
+
+- `url`: URL to be converted to Markdown
+- `html`: HTML string to be converted to Markdown
+- `ignoreSelectors`: Array of selectors to ignore
+- `ignoreHiddenElements`: Boolean to ignore hidden elements, like those with `display: none` (default: `false`)
+- `fetchOptions`: Fetch options to be used when fetching the URL (default: `{}`)
+
 ### Run from the command line
 
 ```bash
@@ -87,7 +95,10 @@ npm run markify -- --url "https://example.com"
 npm run markify -- --html "<h1>Hello World</h1>"
 
 # Run with a specific URL and ignore specific elements
-npm run markify -- --url "https://www.booking.com/hotel/es/the-barcelona-edition.en-gb.html" --ignore "script,style"
+npm run markify -- --url "https://www.booking.com/hotel/es/the-barcelona-edition.en-gb.html" --ignore-selectors "script,style"
+
+# Run with ignore hidden elements
+npm run markify -- --url "https://www.booking.com/hotel/es/the-barcelona-edition.en-gb.html" --ignore-hidden
 
 # Define the output directory/file
 npm run markify -- --url "https://example.com" --output "files/output.md"
