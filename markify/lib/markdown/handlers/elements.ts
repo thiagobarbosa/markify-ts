@@ -4,7 +4,7 @@ import { handleImages } from '@/lib/markdown/handlers/images'
 import { processTable } from '@/lib/markdown/handlers/tables'
 import { processList } from '@/lib/markdown/handlers/lists'
 
-export const MIN_TEXT_LENGTH = 2
+export const MIN_TEXT_LENGTH = 3
 
 export const processElement = async (
   $: cheerio.Root,
@@ -61,8 +61,8 @@ export const processElement = async (
     case 'p': {
       const paragraphText = $node.text().trim()
       return context === 'table'
-        ? `<br>${paragraphText}`
-        : `\n${paragraphText}`
+        ? '<br>' + paragraphText + ' \\'
+        : '\n' + paragraphText + ' \\'
     }
 
     case 'a':
@@ -82,16 +82,16 @@ export const processElement = async (
     case 'b': {
       const strongText = $node.text().trim()
       return context === 'table'
-        ? `<b>${strongText}</b>`
-        : `**${strongText}**`
+        ? '<b>' + strongText + '</b>'
+        : '**' + strongText + '**'
     }
 
     case 'em':
     case 'i': {
       const emText = $node.text().trim()
       return context === 'table'
-        ? `<i>${emText}</i>`
-        : `*${emText}*`
+        ? '<i>' + emText + '</i>'
+        : '*' + emText + '*'
     }
 
     case 'code':

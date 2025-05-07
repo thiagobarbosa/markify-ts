@@ -1,7 +1,7 @@
 import * as cheerio from 'cheerio'
 import { getHTML } from '@/lib/html/html-fetcher'
 import { cleanSpaces, preProcessingRemovals } from '@/lib/utils'
-import { processElement } from '@/lib/markdown/handlers/elements'
+import { processChildren } from '@/lib/markdown/handlers/elements'
 import assert from 'node:assert'
 
 /**
@@ -30,7 +30,7 @@ export const generateMarkdown = async ({ html, url, ignoreSelectors, ignoreHidde
   let $ = cheerio.load(html)
   $ = preProcessingRemovals($, ignoreSelectors, ignoreHiddenElements)
 
-  const promise = processElement($, $('body')[0], 'default', url)
+  const promise = processChildren($, $('body'), 'default', url)
   return await promise.then((markdown) => cleanSpaces(markdown))
 }
 

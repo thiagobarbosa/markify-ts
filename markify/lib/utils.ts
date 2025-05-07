@@ -18,7 +18,6 @@ export const cleanSpaces = (markdown: string): string => {
     markdown
       .replace(/\n{3,}/g, '\n\n')
       .replace(/ {3,}/g, ' ')
-      .replace(/\\/g, '')
       .replace(/^\n+/, '')
       .replace(/\n+$/, '')
       .trim()
