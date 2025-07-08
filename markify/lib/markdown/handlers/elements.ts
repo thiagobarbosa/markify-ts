@@ -72,8 +72,9 @@ export const processElement = async (
       return handleImages($, element, url) || ''
     }
 
-    case 'table':
-      return await processTable($, $node, url)
+    // Processing tables needs a little love
+    // case 'table':
+    //   return await processTable($, $node, url)
 
     case 'li':
       return await processList($, $node, context, url)

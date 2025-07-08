@@ -47,7 +47,7 @@ export default defineConfig({
                 baseUrl: path.resolve(dirname.toString(), tsConfig.compilerOptions.baseUrl || '.'),  // this was missing
                 paths: tsConfig.compilerOptions.paths,  // this was missing
                 keepClassNames: true,
-                target: (tsConfig.compilerOptions.target || 'es2022').toLowerCase() as JscTarget,
+                target: (tsConfig.compilerOptions.target || 'es2020').toLowerCase() as JscTarget,
               }
 
               const result = await swc.transformFile(args.path, {

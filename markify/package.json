@@ -1,11 +1,19 @@
 {
   "name": "markify-ts",
-  "version": "0.0.16",
+  "version": "0.0.17",
   "description": "Convert web pages and HTML snippets into Markdown content",
   "type": "module",
-  "main": "dist/index.js",
-  "module": "dist/index.mjs",
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
   "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "default": "./dist/index.js"
+    }
+  },
   "engines": {
     "node": ">=18.0.0"
   },
@@ -16,7 +24,7 @@
   ],
   "scripts": {
     "markify": "tsx run.ts",
-    "build": "tsup index.ts --minify --dts --format esm --out-dir dist",
+    "build": "tsup",
     "release:prepare": "cp ../README.md ./README.md",
     "release": "npm i && npm run build && npm run release:prepare && npm publish && npm run cleanup",
     "cleanup": "rm -f ./README.md",
