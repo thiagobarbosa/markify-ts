@@ -71,8 +71,8 @@ export const getTextsFromNode = ($: cheerio.Root, element: cheerio.Element): str
   const texts: string[] = []
 
   // If the node is a text node, return its text
-  if (element.type === 'text' && element.data && element.data.length > MIN_TEXT_LENGTH) {
-    texts.push(element.data)
+  if (element.type === 'text' && $(element).text().trim().length > MIN_TEXT_LENGTH) {
+    texts.push($(element).text().trim())
     return texts
   }
 

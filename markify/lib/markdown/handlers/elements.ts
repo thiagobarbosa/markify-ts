@@ -1,7 +1,6 @@
 import cheerio from 'cheerio'
 import { handleLinks } from '@/lib/markdown/handlers/links'
 import { handleImages } from '@/lib/markdown/handlers/images'
-import { processTable } from '@/lib/markdown/handlers/tables'
 import { processList } from '@/lib/markdown/handlers/lists'
 
 export const MIN_TEXT_LENGTH = 3
