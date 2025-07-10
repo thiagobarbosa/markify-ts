@@ -54,10 +54,13 @@ export const preProcessingRemovals = (
 const isVisible = (el: cheerio.Cheerio): boolean => {
   const style = el.attr('style')
   const ariaHidden = el.attr('aria-hidden')
-  if (!style && !ariaHidden) {
-    return true
-  }
-  return !style || (!style?.includes('display: none') && !style?.includes('visibility: hidden') && ariaHidden !== 'true')
+
+  if (!style && !ariaHidden) return true
+
+  const hasHiddenStyle = style?.includes('display: none') || style?.includes('visibility: hidden')
+  const hasAriaHidden = ariaHidden === 'true'
+
+  return !hasHiddenStyle && !hasAriaHidden
 }
 
 
