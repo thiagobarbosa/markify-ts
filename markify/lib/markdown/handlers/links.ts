@@ -27,6 +27,11 @@ export const handleLinks = async (
     href = targetDomain + href
   }
 
+  if (href.startsWith('./')) {
+    const targetDomain = url ? new URL(url).origin : ''
+    href = targetDomain + href.slice(1)
+  }
+
   const $node = $(element)
 
   // Otherwise, process the element as a regular link
