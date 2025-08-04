@@ -17,7 +17,7 @@ export const handleImages = (
 
   const imgAlt = $(element).attr('alt')?.trim() || $(element).attr('title')?.trim() || 'Image'
 
-  return `\n![${imgAlt}](${imgSrc})`
+  return `\n![${imgAlt}](${imgSrc})\n`
 }
 
 /**

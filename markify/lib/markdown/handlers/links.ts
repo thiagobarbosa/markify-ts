@@ -39,7 +39,7 @@ export const handleLinks = async (
   const ariaLabel = $node.attr('aria-label')?.trim()
   const linkText = title || ariaLabel || !$node.children().length ? $node.text().trim() : null
 
-  return linkText?.length ? '\n' + '[' + linkText + '](' + href + ')' + '\n' :
-    '\n\n' + getTextsFromNode($, $node[0]).join('\n* ').trim() + '\n' + href + '\n'
+  return linkText?.length ? '[' + linkText + '](' + href + ')' :
+    getTextsFromNode($, $node[0]).join('\n* ').trim() + '\n' + href
 }
 

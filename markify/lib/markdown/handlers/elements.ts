@@ -15,9 +15,7 @@ export const processElement = async (
 
   if (element.type === 'text') {
     const text = $node.text().trim()
-    // if text already ends with a punctuation mark, don't add another one
-    if (text.match(/[.!?]$/)) return '\n' + text
-    return '\n' + text + '.'
+    return '\n' + text
   }
 
   if (element.type !== 'tag') {
@@ -58,14 +56,13 @@ export const processElement = async (
     }
 
     case 'p': {
-      const paragraphText = $node.text().trim()
-      return context === 'table'
-        ? '<br>' + paragraphText + ' \\'
-        : '\n' + paragraphText + ' \\'
+      return context === 'table' ?
+        '<br>' + await processChildren($, $node, context, url) :
+        '\n' + await processChildren($, $node, context, url)
     }
 
     case 'a':
-      return await handleLinks($, element, url) || ''
+      return ' ' + await handleLinks($, element, url) || ''
 
     case 'img': {
       return handleImages($, element, url) || ''
@@ -82,16 +79,16 @@ export const processElement = async (
     case 'b': {
       const strongText = $node.text().trim()
       return context === 'table'
-        ? '<b>' + strongText + '</b>'
-        : '**' + strongText + '**'
+        ? ' <b>' + strongText + '</b>'
+        : ' **' + strongText + '**'
     }
 
     case 'em':
     case 'i': {
       const emText = $node.text().trim()
       return context === 'table'
-        ? '<i>' + emText + '</i>'
-        : '*' + emText + '*'
+        ? ' <i>' + emText + '</i>'
+        : ' *' + emText + '*'
     }
 
     case 'code':
@@ -138,7 +135,7 @@ export const processChildren = async (
 
   for (const child of $node.contents().toArray()) {
     const processedText = await processElement($, child, context, url)
-    if (processedText.trim().length > MIN_TEXT_LENGTH) {
+    if (processedText.trim().length >= MIN_TEXT_LENGTH) {
       results.push(processedText)
     }
   }
