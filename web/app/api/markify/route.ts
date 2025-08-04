@@ -22,7 +22,7 @@ export async function GET(request: NextRequest) {
       fetchOptions: { headers }
     })
 
-    return new NextResponse(JSON.stringify(result.markdown), {
+    return new NextResponse(JSON.stringify(result), {
       headers: {
         'Content-Type': 'text/markdown; charset=utf-8',
       },

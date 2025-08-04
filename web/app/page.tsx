@@ -16,7 +16,6 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger
@@ -170,14 +169,14 @@ export default function Home() {
 
       {markdown && (
         <Dialog>
-          <DialogTrigger asChild className="w-fit mx-auto mt-4">
+          <DialogTrigger asChild className="mx-auto mt-4">
             <Button
               variant={'outline'}
-              className="rounded-full dark:bg-primary/80 dark:text-primary-foreground/80 dark:hover:bg-primary dark:hover:text-primary-foreground"
+              className="w-fit rounded-full dark:bg-primary/80 dark:text-primary-foreground/80 dark:hover:bg-primary dark:hover:text-primary-foreground"
             >
               View Markdown</Button>
           </DialogTrigger>
-          <DialogContent className="h-[calc(100vh-6rem)] overflow-y-scroll">
+          <DialogContent className="h-[calc(100vh-6rem)] max-w-4xl overflow-y-scroll">
             <DialogHeader>
               <DialogTitle>Markdown</DialogTitle>
               <DialogDescription className={'border-b border-b-muted-foreground pb-4'}>
@@ -204,9 +203,6 @@ export default function Home() {
             <Markdown remarkPlugins={[remarkGfm]}>
               {markdown}
             </Markdown>
-            <DialogFooter>
-              <Button type="submit">Save changes</Button>
-            </DialogFooter>
           </DialogContent>
         </Dialog>
       )}
