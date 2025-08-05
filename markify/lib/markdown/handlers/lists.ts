@@ -8,9 +8,11 @@ export const processList = async (
   url?: string | null
 ): Promise<string> => {
   const parts: string[] = []
+  const isOrderedList = $list.prop('tagName')?.toLowerCase() === 'ol'
+  let counter = 1
 
   // Process each child of the list
-  for (const li of $list) {
+  for (const li of $list.children('li')) {
     const $li = $(li)
 
     const itemText = await processChildren($, $li, context, url)
@@ -19,13 +21,20 @@ export const processList = async (
       // Add prefix only if there's no image or heading inside the list item
       const addPrefix = !$li.find('img').length && !$li.find('h1, h2, h3, h4, h5, h6').length
 
+      const prefix = addPrefix ? (isOrderedList ? `${counter}. ` : '* ') : ''
+
       if (context === 'table') {
-        parts.push('<br><li>' + (addPrefix ? '* ' : '') + itemText.trim() + '</li>')
+        parts.push('<br><li>' + prefix + itemText.trim() + '</li>')
       } else {
-        parts.push('\n' + (addPrefix ? '* ' : '') + itemText.trim())
+        const content = itemText.trim()
+        parts.push(prefix + content)
+      }
+      
+      if (addPrefix && isOrderedList) {
+        counter++
       }
     }
   }
 
-  return parts.join('\n')
+  return parts.length > 0 ? '\n\n' + parts.join('\n') : ''
 }

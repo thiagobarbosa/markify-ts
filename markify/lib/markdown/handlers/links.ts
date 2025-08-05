@@ -1,5 +1,6 @@
 import cheerio from 'cheerio'
 import { getTextsFromNode } from '@/lib/utils'
+import { processChildren } from '@/lib/markdown/handlers/elements'
 
 /**
  * Handle links in markdown content
@@ -37,7 +38,7 @@ export const handleLinks = async (
   // Otherwise, process the element as a regular link
   const title = $node.attr('title')?.trim()
   const ariaLabel = $node.attr('aria-label')?.trim()
-  const linkText = title || ariaLabel || !$node.children().length ? $node.text().trim() : null
+  const linkText = title || ariaLabel || $node.children().length ? await processChildren($, $node, 'default', url) : null
 
   return linkText?.length ? '[' + linkText + '](' + href + ')' :
     getTextsFromNode($, $node[0]).join('\n* ').trim() + '\n' + href

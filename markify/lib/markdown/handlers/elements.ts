@@ -5,6 +5,10 @@ import { processList } from '@/lib/markdown/handlers/lists'
 
 export const MIN_TEXT_LENGTH = 3
 
+const normalizeWhitespace = (text: string): string => {
+  return text.replace(/\s+/g, ' ')
+}
+
 export const processElement = async (
   $: cheerio.Root,
   element: cheerio.Element,
@@ -14,8 +18,7 @@ export const processElement = async (
   const $node = $(element)
 
   if (element.type === 'text') {
-    const text = $node.text().trim()
-    return '\n' + text
+    return normalizeWhitespace($node.text())
   }
 
   if (element.type !== 'tag') {
@@ -56,13 +59,16 @@ export const processElement = async (
     }
 
     case 'p': {
+      const content = await processChildren($, $node, context, url)
       return context === 'table' ?
-        '<br>' + await processChildren($, $node, context, url) :
-        '\n' + await processChildren($, $node, context, url)
+        '<br>' + content :
+        '\n\n' + content
     }
 
-    case 'a':
-      return ' ' + await handleLinks($, element, url) || ''
+    case 'a': {
+      const linkResult = await handleLinks($, element, url)
+      return linkResult || ''
+    }
 
     case 'img': {
       return handleImages($, element, url) || ''
@@ -72,23 +78,27 @@ export const processElement = async (
     // case 'table':
     //   return await processTable($, $node, url)
 
-    case 'li':
+    case 'ol':
+    case 'ul':
       return await processList($, $node, context, url)
+
+    case 'li':
+      return await processChildren($, $node, context, url)
 
     case 'strong':
     case 'b': {
-      const strongText = $node.text().trim()
+      const content = await processChildren($, $node, context, url)
       return context === 'table'
-        ? ' <b>' + strongText + '</b>'
-        : ' **' + strongText + '**'
+        ? '<b>' + content.trim() + '</b>'
+        : '**' + content.trim() + '**'
     }
 
     case 'em':
     case 'i': {
-      const emText = $node.text().trim()
+      const content = await processChildren($, $node, context, url)
       return context === 'table'
-        ? ' <i>' + emText + '</i>'
-        : ' *' + emText + '*'
+        ? '<i>' + content.trim() + '</i>'
+        : '*' + content.trim() + '*'
     }
 
     case 'code':
